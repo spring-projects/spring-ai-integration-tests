@@ -1,8 +1,10 @@
 name: Spring AI Integration Tests
 run-name: Spring AI Integration Tests
 on:
-  - push
-  - workflow_dispatch
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * 1-5'
+    - cron: '0 10 * * 1-5'
 
 jobs:
   test-azure:
@@ -16,8 +18,9 @@ jobs:
         with:
           script: |
             const env = ${{ toJson(env) }}
-            Object.values(env).some(v => v.length === 0) &&
-              core.setFailed('Missing one or more secrets: ' + Object.keys(env).join(', '));
+            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
+            emptyEnvEntries.length > 0 &&
+              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
 
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -46,8 +49,9 @@ jobs:
         with:
           script: |
             const env = ${{ toJson(env) }}
-            Object.values(env).some(v => v.length === 0) &&
-              core.setFailed('Missing one or more secrets: ' + Object.keys(env).join(', '));
+            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
+            emptyEnvEntries.length > 0 &&
+              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
 
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -73,6 +77,15 @@ jobs:
       AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check environment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const env = ${{ toJson(env) }}
+            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
+            emptyEnvEntries.length > 0 &&
+              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
+
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
