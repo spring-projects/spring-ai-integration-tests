@@ -34,39 +34,20 @@ The standard steps to:
 - checkout che springAI source
 - install java 17
 - compile the springAI code without running tests
+- execute the integration test are all in a custom action
 
 ```yaml
     steps:
-      - name: Check environment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const env = ${{ toJson(env) }}
-            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
-            emptyEnvEntries.length > 0 &&
-              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
-
-      - name: Check out repository code
+      - name: Checkout the action
         uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
         with:
-          repository: spring-projects/spring-ai
-          ref: refs/heads/main
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install
-        run: ./mvnw install -DskipTests
+          model-name: anthropic
 ```
 
-Then customize this step to execute the models integrations tests
-```yaml
-      - name: Run Anthropic model tests
-        run: ./mvnw -pl models/spring-ai-anthropic -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
-```
-
+The only customization needed is the model name... custom action assumes `models/spring-ai-` so for the above example the model-name is `anthropic` and `models/spring-ai-anthropic` will be integration tested.
 ## Autoconfiguration Test
 The autoconfiguration test runs for any of the properties in the `env` section
 and when they have values the environment variable needs to be uncommented to be
