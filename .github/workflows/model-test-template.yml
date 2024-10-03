@@ -16,7 +16,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const env = ${{ toJson(env) }}
+            const env = ${{ toJson(secrets) }}
             const emptyEnvEntries = Object.entries(env).filter(e => e[1] === null)
             emptyEnvEntries.length > 0 &&
               core.setFailed('Missing value for secret(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
