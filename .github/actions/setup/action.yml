@@ -18,4 +18,5 @@ runs:
         cache: maven
 
     - name: Install
+      shell: bash
       run: ./mvnw install -DskipTests
