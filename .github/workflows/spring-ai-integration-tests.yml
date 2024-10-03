@@ -1,7 +1,6 @@
 name: Spring AI Integration Tests
 run-name: Spring AI Integration Tests
 on:
-  push:
   workflow_dispatch:
   schedule:
     - cron: '0 4 * * 1-5'
@@ -181,5 +180,5 @@ jobs:
       - name: Checkout the action
         uses: actions/checkout@v4
 
-      - name: Integration Test
+      - name: Autoconfigure Test
         uses: ./.github/actions/do-autoconfigure-test
