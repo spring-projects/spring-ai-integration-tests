@@ -43,7 +43,7 @@ jobs:
       AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
       # TODO AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME needs to be added when we have a value
-    uses: ./.github/workflows/model-test-template.yml@wip
+    uses: ./.github/workflows/model-test-template.yml
     with:
       model-name: azure-openai
     secrets: inherit
