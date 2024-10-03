@@ -118,6 +118,47 @@ jobs:
         with:
           model-name: stability-ai
 
+  test-vertex-ai-embedding:
+    runs-on: ubuntu-latest
+    env:
+      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
+      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
+    steps:
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: vertex-ai-embedding
+
+  test-vertex-ai-gemini:
+    runs-on: ubuntu-latest
+    env:
+      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
+      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
+    steps:
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: vertex-ai-gemini
+
+  test-vertex-ai-palm2:
+    runs-on: ubuntu-latest
+    env:
+      PALM_API_KEY: ${{ secrets.PALM_API_KEY }}
+    steps:
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: vertex-ai-palm2
+
   test-autoconfigure:
     env:
       # TODO: uncomment keys that have values
@@ -131,7 +172,10 @@ jobs:
 #      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
 #      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
 #      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+#      PALM_API_KEY: ${{ secrets.PALM_API_KEY }}
 #      STABILITYAI_API_KEY: ${{ secrets.STABILITYAI_API_KEY }}
+#      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
+#      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the action
