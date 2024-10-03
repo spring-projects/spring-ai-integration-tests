@@ -57,6 +57,11 @@ jobs:
       - name: Checkout the action
         uses: actions/checkout@v4
 
+      - name: debug
+        with:
+          script: |
+            ls -lR
+
       - name: Common
         uses: ./.github/actions/setup@wip
 
