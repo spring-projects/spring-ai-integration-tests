@@ -53,8 +53,8 @@ jobs:
             emptyEnvEntries.length > 0 &&
               core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
 
-      - name: common
-        uses: ./.github/workflows/model-test-template.yml
+#      - name: common
+#        uses: ./.github/workflows/model-test-template.yml
       - name: Run Anthropic model tests
         run: ./mvnw -pl models/spring-ai-azure-openai -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
 
