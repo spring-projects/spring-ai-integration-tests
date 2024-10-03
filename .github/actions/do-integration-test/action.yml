@@ -36,4 +36,5 @@ runs:
       run: ./mvnw install -DskipTests
 
     - name: Run ${{ inputs.model-name }} model tests
+      shell: bash
       run: ./mvnw -pl models/spring-ai-${{ inputs.model-name }} -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
