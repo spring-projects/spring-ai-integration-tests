@@ -59,10 +59,10 @@ jobs:
 
       - name: debug
         run: |
-            ls -lR
+            ls -alR
 
       - name: Common
-        uses: ./.github/actions/setup@wip
+        uses: ./.github/actions/setup
 
       - name: Run Azure OpenAI model tests
         run: ./mvnw -pl models/spring-ai-azure-openai -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
