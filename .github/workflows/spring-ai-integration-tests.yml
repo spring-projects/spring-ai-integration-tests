@@ -45,23 +45,13 @@ jobs:
       # TODO AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME needs to be added when we have a value
     runs-on: ubuntu-latest
     steps:
-      - name: Check environment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const env = ${{ toJson(env) }}
-            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
-            emptyEnvEntries.length > 0 &&
-              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
-
       - name: Checkout the action
         uses: actions/checkout@v4
 
-      - name: Common
-        uses: ./.github/actions/setup
-
-      - name: Run Azure OpenAI model tests
-        run: ./mvnw -pl models/spring-ai-azure-openai -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: azure-openai
 
   test-bedrock:
     runs-on: ubuntu-latest
