@@ -33,3 +33,6 @@ runs:
     - name: Run Spring AI Autoconfigure test
       shell: bash
       run: ./mvnw -pl spring-ai-spring-boot-autoconfigure -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+
+    - name: workaround - checkout the action again
+      uses: actions/checkout@v4
