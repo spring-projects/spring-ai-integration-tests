@@ -54,6 +54,9 @@ jobs:
             emptyEnvEntries.length > 0 &&
               core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
 
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
       - name: Common
         uses: ./.github/actions/setup@wip
 
