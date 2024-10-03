@@ -4,6 +4,15 @@ description: "Setup For SpringAI tests"
 runs:
   using: "composite"
   steps:
+    - name: Check environment
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const env = ${{ toJson(env) }}
+          const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
+          emptyEnvEntries.length > 0 &&
+            core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
+
     - name: Check out repository code
       uses: actions/checkout@v4
       with:
