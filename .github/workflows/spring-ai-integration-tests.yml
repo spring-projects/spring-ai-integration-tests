@@ -1,6 +1,7 @@
 name: Spring AI Integration Tests
 run-name: Spring AI Integration Tests
 on:
+  push:
   workflow_dispatch:
   schedule:
     - cron: '0 4 * * 1-5'
@@ -42,32 +43,9 @@ jobs:
       AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
       # TODO AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME needs to be added when we have a value
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check environment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const env = ${{ toJson(env) }}
-            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
-            emptyEnvEntries.length > 0 &&
-              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
-
-      - name: Check out repository code
-        uses: actions/checkout@v4
-        with:
-          repository: spring-projects/spring-ai
-          ref: refs/heads/main
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install
-        run: ./mvnw install -DskipTests
-      - name: Run Azure OpenAI model tests
-        run: ./mvnw -pl models/spring-ai-azure-openai -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+    uses: ./github/workflows/model-test-template.yml
+    with:
+      model-name: spring-ai-azure-openai
 
   test-bedrock:
     runs-on: ubuntu-latest
