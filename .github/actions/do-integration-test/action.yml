@@ -1,0 +1,43 @@
+name: "Setup for SpringAI tests"
+description: "Setup For SpringAI tests"
+
+inputs:
+  model-name:
+    description: "SpringAI Model to integration test"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check environment
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const env = ${{ toJson(env) }}
+          const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
+          emptyEnvEntries.length > 0 &&
+            core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
+
+    - name: Check out repository code
+      uses: actions/checkout@v4
+      with:
+        repository: spring-projects/spring-ai
+        ref: refs/heads/main
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Install
+      shell: bash
+      run: ./mvnw install -DskipTests
+
+    - name: Run ${{ inputs.model-name }} model tests
+      shell: bash
+      run: ./mvnw -pl models/spring-ai-${{ inputs.model-name }} -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+
+    - name: workaround - checkout the action again
+      uses: actions/checkout@v4

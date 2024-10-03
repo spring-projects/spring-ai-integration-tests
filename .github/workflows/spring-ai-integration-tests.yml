@@ -12,30 +12,13 @@ jobs:
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
-      - name: Check environment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const env = ${{ toJson(env) }}
-            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
-            emptyEnvEntries.length > 0 &&
-              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
-
-      - name: Check out repository code
+      - name: Checkout the action
         uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
         with:
-          repository: spring-projects/spring-ai
-          ref: refs/heads/main
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install
-        run: ./mvnw install -DskipTests
-      - name: Run Anthropic model tests
-        run: ./mvnw -pl models/spring-ai-anthropic -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+          model-name: anthropic
 
   test-azure-openai:
     env:
@@ -44,30 +27,13 @@ jobs:
       # TODO AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME needs to be added when we have a value
     runs-on: ubuntu-latest
     steps:
-      - name: Check environment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const env = ${{ toJson(env) }}
-            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
-            emptyEnvEntries.length > 0 &&
-              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
-
-      - name: Check out repository code
+      - name: Checkout the action
         uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
         with:
-          repository: spring-projects/spring-ai
-          ref: refs/heads/main
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install
-        run: ./mvnw install -DskipTests
-      - name: Run Azure OpenAI model tests
-        run: ./mvnw -pl models/spring-ai-azure-openai -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+          model-name: azure-openai
 
   test-bedrock:
     runs-on: ubuntu-latest
@@ -75,30 +41,13 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
-      - name: Check environment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const env = ${{ toJson(env) }}
-            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
-            emptyEnvEntries.length > 0 &&
-              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
-
-      - name: Check out repository code
+      - name: Checkout the action
         uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
         with:
-          repository: spring-projects/spring-ai
-          ref: refs/heads/main
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install
-        run: ./mvnw install -DskipTests
-      - name: Run Bedrock model tests
-        run: ./mvnw -pl models/spring-ai-bedrock -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+          model-name: bedrock
 
   test-huggingface:
     runs-on: ubuntu-latest
@@ -106,60 +55,26 @@ jobs:
       HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
       HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
     steps:
-      - name: Check environment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const env = ${{ toJson(env) }}
-            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
-            emptyEnvEntries.length > 0 &&
-              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
-
-      - name: Check out repository code
+      - name: Checkout the action
         uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
         with:
-          repository: spring-projects/spring-ai
-          ref: refs/heads/main
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install
-        run: ./mvnw install -DskipTests
-      - name: Run Hugging Face model tests
-        run: ./mvnw -pl models/spring-ai-huggingface -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+          model-name: huggingface
 
   test-mistral-ai:
     runs-on: ubuntu-latest
     env:
       MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
     steps:
-      - name: Check environment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const env = ${{ toJson(env) }}
-            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
-            emptyEnvEntries.length > 0 &&
-              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
-
-      - name: Check out repository code
+      - name: Checkout the action
         uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
         with:
-          repository: spring-projects/spring-ai
-          ref: refs/heads/main
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install
-        run: ./mvnw install -DskipTests
-      - name: Run Mistral AI model tests
-        run: ./mvnw -pl models/spring-ai-mistral-ai -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+          model-name: mistral-ai
 
 # Removed since not able to get keys from ORACLE
 # When keys are available uncomment this code and verify no other structural changes in the other jobs
@@ -168,90 +83,80 @@ jobs:
 #    env:
 #      OCI_COMPARTMENT_ID_KEY: ${{ secrets.OCI_COMPARTMENT_ID_KEY }}
 #    steps:
-#      - name: Check environment
-#        uses: actions/github-script@v7
-#        with:
-#          script: |
-#            const env = ${{ toJson(env) }}
-#            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
-#            emptyEnvEntries.length > 0 &&
-#              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
-#
-#      - name: Check out repository code
+#      - name: Checkout the action
 #        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
 #        with:
-#          repository: spring-projects/spring-ai
-#          ref: refs/heads/main
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v4
-#        with:
-#          java-version: '17'
-#          distribution: 'temurin'
-#          cache: maven
-#      - name: Install
-#        run: ./mvnw install -DskipTests
-#      - name: Run OCI GenAI model tests
-#        run: ./mvnw -pl models/spring-ai-oci-genai -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+#          model-name: oci-genai
 
   test-openai:
     runs-on: ubuntu-latest
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
-      - name: Check environment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const env = ${{ toJson(env) }}
-            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
-            emptyEnvEntries.length > 0 &&
-              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
-
-      - name: Check out repository code
+      - name: Checkout the action
         uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
         with:
-          repository: spring-projects/spring-ai
-          ref: refs/heads/main
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install
-        run: ./mvnw install -DskipTests
-      - name: Run OpenAI model tests
-        run: ./mvnw -pl models/spring-ai-openai -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+          model-name: openai
 
   test-stability-ai:
     runs-on: ubuntu-latest
     env:
       STABILITYAI_API_KEY: ${{ secrets.STABILITYAI_API_KEY }}
     steps:
-      - name: Check environment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const env = ${{ toJson(env) }}
-            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
-            emptyEnvEntries.length > 0 &&
-              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
-
-      - name: Check out repository code
+      - name: Checkout the action
         uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
         with:
-          repository: spring-projects/spring-ai
-          ref: refs/heads/main
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+          model-name: stability-ai
+
+  test-vertex-ai-embedding:
+    runs-on: ubuntu-latest
+    env:
+      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
+      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
+    steps:
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install
-        run: ./mvnw install -DskipTests
-      - name: Run Stability AI model tests
-        run: ./mvnw -pl models/spring-ai-stability-ai -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+          model-name: vertex-ai-embedding
+
+  test-vertex-ai-gemini:
+    runs-on: ubuntu-latest
+    env:
+      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
+      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
+    steps:
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: vertex-ai-gemini
+
+  test-vertex-ai-palm2:
+    runs-on: ubuntu-latest
+    env:
+      PALM_API_KEY: ${{ secrets.PALM_API_KEY }}
+    steps:
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: vertex-ai-palm2
 
   test-autoconfigure:
     env:
@@ -266,30 +171,14 @@ jobs:
 #      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
 #      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
 #      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+#      PALM_API_KEY: ${{ secrets.PALM_API_KEY }}
 #      STABILITYAI_API_KEY: ${{ secrets.STABILITYAI_API_KEY }}
+#      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
+#      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check environment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const env = ${{ toJson(env) }}
-            const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
-            emptyEnvEntries.length > 0 &&
-              core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
-
-      - name: Check out repository code
+      - name: Checkout the action
         uses: actions/checkout@v4
-        with:
-          repository: spring-projects/spring-ai
-          ref: refs/heads/main
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install
-        run: ./mvnw install -DskipTests
-      - name: Run Spring Boot Autoconfigure tests
-        run: ./mvnw -pl spring-ai-spring-boot-autoconfigure -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+
+      - name: Autoconfigure Test
+        uses: ./.github/actions/do-autoconfigure-test
