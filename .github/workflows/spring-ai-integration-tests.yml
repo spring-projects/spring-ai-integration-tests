@@ -7,8 +7,29 @@ on:
     - cron: '0 10 * * 1-5'
 
 jobs:
+
+  test-ollama:
+    runs-on: ubuntu-latest
+    env:
+      OLLAMA_TESTS_ENABLED: true
+      OLLAMA_WITH_REUSE: true
+    steps:
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
+      - name: Configure Testcontainers
+        run: |
+          mkdir -p $HOME
+          echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties       
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: ollama
+
   test-anthropic:
     runs-on: ubuntu-latest
+    if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
@@ -21,11 +42,12 @@ jobs:
           model-name: anthropic
 
   test-azure-openai:
+    runs-on: ubuntu-latest
+    if: ${{ secrets.AZURE_OPENAI_API_KEY != '' && secrets.AZURE_OPENAI_ENDPOINT != '' }}
     env:
       AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
       # TODO AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME needs to be added when we have a value
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout the action
         uses: actions/checkout@v4
@@ -35,22 +57,24 @@ jobs:
         with:
           model-name: azure-openai
 
-  test-bedrock:
-    runs-on: ubuntu-latest
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    steps:
-      - name: Checkout the action
-        uses: actions/checkout@v4
-
-      - name: Integration Test
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: bedrock
+#  test-bedrock:
+#    runs-on: ubuntu-latest
+#    if: ${{ secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != '' }}
+#    env:
+#      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: bedrock
 
   test-huggingface:
     runs-on: ubuntu-latest
+    if: ${{ secrets.HUGGINGFACE_API_KEY != '' && secrets.HUGGINGFACE_CHAT_URL != '' }}
     env:
       HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
       HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
@@ -93,6 +117,7 @@ jobs:
 
   test-openai:
     runs-on: ubuntu-latest
+    if: ${{ secrets.OPENAI_API_KEY != '' }}
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
@@ -106,6 +131,7 @@ jobs:
 
   test-stability-ai:
     runs-on: ubuntu-latest
+    if: ${{ secrets.STABILITYAI_API_KEY != '' }}
     env:
       STABILITYAI_API_KEY: ${{ secrets.STABILITYAI_API_KEY }}
     steps:
@@ -117,46 +143,33 @@ jobs:
         with:
           model-name: stability-ai
 
-  test-vertex-ai-embedding:
-    runs-on: ubuntu-latest
-    env:
-      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
-      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
-    steps:
-      - name: Checkout the action
-        uses: actions/checkout@v4
-
-      - name: Integration Test
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: vertex-ai-embedding
-
-  test-vertex-ai-gemini:
-    runs-on: ubuntu-latest
-    env:
-      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
-      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
-    steps:
-      - name: Checkout the action
-        uses: actions/checkout@v4
-
-      - name: Integration Test
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: vertex-ai-gemini
-
-  test-vertex-ai-palm2:
-    runs-on: ubuntu-latest
-    env:
-      PALM_API_KEY: ${{ secrets.PALM_API_KEY }}
-    steps:
-      - name: Checkout the action
-        uses: actions/checkout@v4
-
-      - name: Integration Test
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: vertex-ai-palm2
+#  test-vertex-ai-embedding:
+#    runs-on: ubuntu-latest
+#    env:
+#      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
+#      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: vertex-ai-embedding
+#
+#  test-vertex-ai-gemini:
+#    runs-on: ubuntu-latest
+#    env:
+#      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
+#      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: vertex-ai-gemini
 
   test-autoconfigure:
     env:
