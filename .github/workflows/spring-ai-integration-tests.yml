@@ -89,6 +89,7 @@ jobs:
 
   test-mistral-ai:
     runs-on: ubuntu-latest
+    if: ${{ github.secrets.MISTRAL_AI_API_KEY != '' }}
     env:
       MISTRAL_AI_API_KEY: ${{ github.secrets.MISTRAL_AI_API_KEY }}
     steps:
