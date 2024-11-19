@@ -43,24 +43,24 @@ jobs:
         with:
           model-name: ollama
 
-    test-anthropic:
-      runs-on: ubuntu-latest
-      env:
-        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      steps:
-        - name: Check secret
-          id: secret_check
-          if: ${{ env.ANTHROPIC_API_KEY != '' }}
-          run: echo "Secret exists"
+  test-anthropic:
+    runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - name: Check secret
+        id: secret_check
+        if: ${{ env.ANTHROPIC_API_KEY != '' }}
+        run: echo "Secret exists"
 
-        - uses: actions/checkout@v4
-          if: steps.secret_check.conclusion == 'success'
+      - uses: actions/checkout@v4
+        if: steps.secret_check.conclusion == 'success'
 
-        - name: Integration Test
-          if: steps.secret_check.conclusion == 'success'
-          uses: ./.github/actions/do-integration-test
-          with:
-            model-name: anthropic
+      - name: Integration Test
+        if: steps.secret_check.conclusion == 'success'
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: anthropic
 
 #  test-azure-openai:
 #    runs-on: ubuntu-latest
