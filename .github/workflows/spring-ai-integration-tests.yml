@@ -45,7 +45,7 @@ jobs:
 
   test-anthropic:
     runs-on: ubuntu-latest
-    if: ${{ github.secrets.ANTHROPIC_API_KEY != '' }}
+    if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
@@ -59,7 +59,7 @@ jobs:
 
   test-azure-openai:
     runs-on: ubuntu-latest
-    if: ${{ github.secrets.AZURE_OPENAI_API_KEY != '' && github.secrets.AZURE_OPENAI_ENDPOINT != '' }}
+    if: ${{ secrets.AZURE_OPENAI_API_KEY != '' && secrets.AZURE_OPENAI_ENDPOINT != '' }}
     env:
       AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
@@ -90,7 +90,7 @@ jobs:
 
   test-huggingface:
     runs-on: ubuntu-latest
-    if: ${{ github.secrets.HUGGINGFACE_API_KEY != '' && github.secrets.HUGGINGFACE_CHAT_URL != '' }}
+    if: ${{ secrets.HUGGINGFACE_API_KEY != '' && secrets.HUGGINGFACE_CHAT_URL != '' }}
     env:
       HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
       HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
@@ -105,9 +105,9 @@ jobs:
 
   test-mistral-ai:
     runs-on: ubuntu-latest
-    if: ${{ github.secrets.MISTRAL_AI_API_KEY != '' }}
+    if: ${{ secrets.MISTRAL_AI_API_KEY != '' }}
     env:
-      MISTRAL_AI_API_KEY: ${{ github.secrets.MISTRAL_AI_API_KEY }}
+      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
     steps:
       - name: Checkout the action
         uses: actions/checkout@v4
@@ -134,7 +134,7 @@ jobs:
 
   test-openai:
     runs-on: ubuntu-latest
-    if: ${{ github.secrets.OPENAI_API_KEY != '' }}
+    if: ${{ secrets.OPENAI_API_KEY != '' }}
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
@@ -148,7 +148,7 @@ jobs:
 
   test-stability-ai:
     runs-on: ubuntu-latest
-    if: ${{ github.secrets.STABILITYAI_API_KEY != '' }}
+    if: ${{ secrets.STABILITYAI_API_KEY != '' }}
     env:
       STABILITYAI_API_KEY: ${{ secrets.STABILITYAI_API_KEY }}
     steps:
