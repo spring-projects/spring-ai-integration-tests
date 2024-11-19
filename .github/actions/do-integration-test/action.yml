@@ -5,6 +5,10 @@ inputs:
   model-name:
     description: "SpringAI Model to integration test"
     required: true
+  maven-properties:
+    description: "Maven properties to pass to the build (e.g., -Dskip.vectorstore.milvus=true -Dskip.vectorstore.neo4j=true)"
+    required: false
+    default: ""
 
 runs:
   using: "composite"
@@ -38,4 +42,4 @@ runs:
 
     - name: Run ${{ inputs.model-name }} model tests
       shell: bash
-      run: cd spring-ai && ./mvnw -pl models/spring-ai-${{ inputs.model-name }} -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && ./mvnw -pl models/spring-ai-${{ inputs.model-name }} -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify

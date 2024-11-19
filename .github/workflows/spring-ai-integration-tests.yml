@@ -16,7 +16,6 @@ jobs:
         ports:
           - 11434:11434
     env:
-      OLLAMA_TESTS_ENABLED: true
       OLLAMA_WITH_REUSE: true
     steps:
       - name: Checkout the action
@@ -37,6 +36,7 @@ jobs:
         uses: ./.github/actions/do-integration-test
         with:
           model-name: ollama
+          maven-properties: "-Dskip.model.ollama=false"
 
 # Anthrohpic is overloaded :(
 #
