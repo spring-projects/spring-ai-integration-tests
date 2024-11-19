@@ -38,35 +38,40 @@ jobs:
         with:
           model-name: ollama
 
-  test-anthropic:
-    runs-on: ubuntu-latest
-    env:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-    steps:
-      - name: Check secret
-        id: secret_check
-        if: ${{ env.ANTHROPIC_API_KEY != '' }}
-        run: echo "Secret exists"
-
-      - uses: actions/checkout@v4
-        if: steps.secret_check.conclusion == 'success'
-
-      - name: Integration Test
-        if: steps.secret_check.conclusion == 'success'
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: anthropic
+# Anthrohpic is overloaded :(
+#
+#  test-anthropic:
+#    runs-on: ubuntu-latest
+#    env:
+#      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+#    steps:
+#      - name: Check secret
+#        id: secret_check
+#        if: ${{ env.ANTHROPIC_API_KEY != '' }}
+#        run: echo "Secret exists"
+#
+#      - uses: actions/checkout@v4
+#        if: steps.secret_check.conclusion == 'success'
+#
+#      - name: Integration Test
+#        if: steps.secret_check.conclusion == 'success'
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: anthropic
 
   test-azure-openai:
     runs-on: ubuntu-latest
     env:
       AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
-      # TODO AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME needs to be added when we have a value
+      AZURE_OPENAI_TRANSCRIPTION_API_KEY: ${{ secrets.AZURE_OPENAI_TRANSCRIPTION_API_KEY }}
+      AZURE_OPENAI_TRANSCRIPTION_ENDPOINT: ${{ secrets.AZURE_OPENAI_TRANSCRIPTION_ENDPOINT }}
+      AZURE_OPENAI_IMAGE_API_KEY: ${{ secrets.AZURE_OPENAI_IMAGE_API_KEY }}
+      AZURE_OPENAI_IMAGE_ENDPOINT: ${{ secrets.AZURE_OPENAI_IMAGE_ENDPOINT }}
     steps:
       - name: Check secrets
         id: secret_check
-        if: ${{ env.AZURE_OPENAI_API_KEY != '' && env.AZURE_OPENAI_ENDPOINT != '' }}
+        if: ${{ env.AZURE_OPENAI_API_KEY != '' && env.AZURE_OPENAI_ENDPOINT != '' && env.AZURE_OPENAI_TRANSCRIPTION_API_KEY != '' && env.AZURE_OPENAI_TRANSCRIPTION_ENDPOINT != '' && env.AZURE_OPENAI_IMAGE_API_KEY != '' && env.AZURE_OPENAI_IMAGE_ENDPOINT != '' }}
         run: echo "Secrets exist"
 
       - uses: actions/checkout@v4
