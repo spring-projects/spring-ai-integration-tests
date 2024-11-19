@@ -10,6 +10,16 @@ jobs:
 
   test-ollama:
     runs-on: ubuntu-latest
+    services:
+      ollama:
+        image: ollama/ollama:latest
+        ports:
+          - 11434:11434
+        options: >-
+          --health-cmd="curl --fail http://localhost:11434/health || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     env:
       OLLAMA_TESTS_ENABLED: true
       OLLAMA_WITH_REUSE: true
@@ -17,11 +27,11 @@ jobs:
       - name: Checkout the action
         uses: actions/checkout@v4
 
-      - name: Install Ollama
-        run: |
-          curl -fsSL https://ollama.com/install.sh | sh
-          ollama serve &
-          sleep 10  # Give Ollama time to start up
+#      - name: Install Ollama
+#        run: |
+#          curl -fsSL https://ollama.com/install.sh | sh
+#          ollama serve &
+#          sleep 10  # Give Ollama time to start up
 
       - name: Configure Testcontainers
         run: |
