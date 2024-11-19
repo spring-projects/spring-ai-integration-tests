@@ -15,11 +15,7 @@ jobs:
         image: ollama/ollama:latest
         ports:
           - 11434:11434
-        options: >-
-          --health-cmd="curl --fail http://localhost:11434/api/tags || exit 1"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+
     env:
       OLLAMA_TESTS_ENABLED: true
       OLLAMA_WITH_REUSE: true
