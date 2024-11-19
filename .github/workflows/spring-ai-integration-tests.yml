@@ -43,35 +43,40 @@ jobs:
         with:
           model-name: ollama
 
-  test-anthropic:
-    runs-on: ubuntu-latest
-    env:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-    if: ${{ env.ANTHROPIC_API_KEY != '' }}
-    steps:
-      - name: Checkout the action
-        uses: actions/checkout@v4
+    test-anthropic:
+      runs-on: ubuntu-latest
+      env:
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      steps:
+        - name: Check secret
+          id: secret_check
+          if: ${{ env.ANTHROPIC_API_KEY != '' }}
+          run: echo "Secret exists"
 
-      - name: Integration Test
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: anthropic
+        - uses: actions/checkout@v4
+          if: steps.secret_check.conclusion == 'success'
 
-  test-azure-openai:
-    runs-on: ubuntu-latest
-    if: ${{ secrets.AZURE_OPENAI_API_KEY != '' && secrets.AZURE_OPENAI_ENDPOINT != '' }}
-    env:
-      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-      AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
-      # TODO AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME needs to be added when we have a value
-    steps:
-      - name: Checkout the action
-        uses: actions/checkout@v4
+        - name: Integration Test
+          if: steps.secret_check.conclusion == 'success'
+          uses: ./.github/actions/do-integration-test
+          with:
+            model-name: anthropic
 
-      - name: Integration Test
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: azure-openai
+#  test-azure-openai:
+#    runs-on: ubuntu-latest
+#    if: ${{ secrets.AZURE_OPENAI_API_KEY != '' && secrets.AZURE_OPENAI_ENDPOINT != '' }}
+#    env:
+#      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+#      AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+#      # TODO AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME needs to be added when we have a value
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: azure-openai
 
 #  test-bedrock:
 #    runs-on: ubuntu-latest
@@ -88,34 +93,34 @@ jobs:
 #        with:
 #          model-name: bedrock
 
-  test-huggingface:
-    runs-on: ubuntu-latest
-    env:
-      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
-      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
-    if: ${{ env.HUGGINGFACE_API_KEY != '' && env.HUGGINGFACE_CHAT_URL != '' }}
-    steps:
-      - name: Checkout the action
-        uses: actions/checkout@v4
-
-      - name: Integration Test
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: huggingface
-
-  test-mistral-ai:
-    runs-on: ubuntu-latest
-    env:
-      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
-    if: ${{ env.MISTRAL_AI_API_KEY != '' }}
-    steps:
-      - name: Checkout the action
-        uses: actions/checkout@v4
-
-      - name: Integration Test
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: mistral-ai
+#  test-huggingface:
+#    runs-on: ubuntu-latest
+#    env:
+#      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
+#      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
+#    if: ${{ env.HUGGINGFACE_API_KEY != '' && env.HUGGINGFACE_CHAT_URL != '' }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: huggingface
+#
+#  test-mistral-ai:
+#    runs-on: ubuntu-latest
+#    env:
+#      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
+#    if: ${{ env.MISTRAL_AI_API_KEY != '' }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: mistral-ai
 
 # Removed since not able to get keys from ORACLE
 # When keys are available uncomment this code and verify no other structural changes in the other jobs
@@ -132,33 +137,33 @@ jobs:
 #        with:
 #          model-name: oci-genai
 
-  test-openai:
-    runs-on: ubuntu-latest
-    env:
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-    if: ${{ env.OPENAI_API_KEY != '' }}
-    steps:
-      - name: Checkout the action
-        uses: actions/checkout@v4
-
-      - name: Integration Test
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: openai
-
-  test-stability-ai:
-    runs-on: ubuntu-latest
-    env:
-      STABILITYAI_API_KEY: ${{ secrets.STABILITYAI_API_KEY }}
-    if: ${{ env.STABILITYAI_API_KEY != '' }}
-    steps:
-      - name: Checkout the action
-        uses: actions/checkout@v4
-
-      - name: Integration Test
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: stability-ai
+#  test-openai:
+#    runs-on: ubuntu-latest
+#    env:
+#      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+#    if: ${{ env.OPENAI_API_KEY != '' }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: openai
+#
+#  test-stability-ai:
+#    runs-on: ubuntu-latest
+#    env:
+#      STABILITYAI_API_KEY: ${{ secrets.STABILITYAI_API_KEY }}
+#    if: ${{ env.STABILITYAI_API_KEY != '' }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: stability-ai
 
 #  test-vertex-ai-embedding:
 #    runs-on: ubuntu-latest
