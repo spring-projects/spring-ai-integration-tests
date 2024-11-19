@@ -45,9 +45,9 @@ jobs:
 
   test-anthropic:
     runs-on: ubuntu-latest
-    if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    if: ${{ env.ANTHROPIC_API_KEY != '' }}
     steps:
       - name: Checkout the action
         uses: actions/checkout@v4
@@ -90,10 +90,10 @@ jobs:
 
   test-huggingface:
     runs-on: ubuntu-latest
-    if: ${{ secrets.HUGGINGFACE_API_KEY != '' && secrets.HUGGINGFACE_CHAT_URL != '' }}
     env:
       HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
       HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
+    if: ${{ env.HUGGINGFACE_API_KEY != '' && env.HUGGINGFACE_CHAT_URL != '' }}
     steps:
       - name: Checkout the action
         uses: actions/checkout@v4
@@ -105,9 +105,9 @@ jobs:
 
   test-mistral-ai:
     runs-on: ubuntu-latest
-    if: ${{ secrets.MISTRAL_AI_API_KEY != '' }}
     env:
       MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
+    if: ${{ env.MISTRAL_AI_API_KEY != '' }}
     steps:
       - name: Checkout the action
         uses: actions/checkout@v4
@@ -134,9 +134,9 @@ jobs:
 
   test-openai:
     runs-on: ubuntu-latest
-    if: ${{ secrets.OPENAI_API_KEY != '' }}
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    if: ${{ env.OPENAI_API_KEY != '' }}
     steps:
       - name: Checkout the action
         uses: actions/checkout@v4
@@ -148,9 +148,9 @@ jobs:
 
   test-stability-ai:
     runs-on: ubuntu-latest
-    if: ${{ secrets.STABILITYAI_API_KEY != '' }}
     env:
       STABILITYAI_API_KEY: ${{ secrets.STABILITYAI_API_KEY }}
+    if: ${{ env.STABILITYAI_API_KEY != '' }}
     steps:
       - name: Checkout the action
         uses: actions/checkout@v4
