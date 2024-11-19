@@ -15,7 +15,6 @@ jobs:
         image: ollama/ollama:latest
         ports:
           - 11434:11434
-
     env:
       OLLAMA_TESTS_ENABLED: true
       OLLAMA_WITH_REUSE: true
@@ -43,34 +42,41 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-    if: ${{ env.ANTHROPIC_API_KEY != '' }}
     steps:
       - name: Check secret
         id: secret_check
+        if: ${{ env.ANTHROPIC_API_KEY != '' }}
         run: echo "Secret exists"
 
       - uses: actions/checkout@v4
+        if: steps.secret_check.conclusion == 'success'
 
       - name: Integration Test
+        if: steps.secret_check.conclusion == 'success'
         uses: ./.github/actions/do-integration-test
         with:
           model-name: anthropic
 
-  test-azure-openai:
-    runs-on: ubuntu-latest
-    env:
-      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-      AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
-      # TODO AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME needs to be added when we have a value
-    if: ${{ env.AZURE_OPENAI_API_KEY != '' && env.AZURE_OPENAI_ENDPOINT != '' }}
-    steps:
-      - name: Checkout the action
-        uses: actions/checkout@v4
+test-azure-openai:
+  runs-on: ubuntu-latest
+  env:
+    AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+    AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+    # TODO AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME needs to be added when we have a value
+  steps:
+    - name: Check secrets
+      id: secret_check
+      if: ${{ env.AZURE_OPENAI_API_KEY != '' && env.AZURE_OPENAI_ENDPOINT != '' }}
+      run: echo "Secrets exist"
 
-      - name: Integration Test
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: azure-openai
+    - uses: actions/checkout@v4
+      if: steps.secret_check.conclusion == 'success'
+
+    - name: Integration Test
+      if: steps.secret_check.conclusion == 'success'
+      uses: ./.github/actions/do-integration-test
+      with:
+        model-name: azure-openai
 
 #  test-bedrock:
 #    runs-on: ubuntu-latest
