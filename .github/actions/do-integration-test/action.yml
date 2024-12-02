@@ -6,7 +6,7 @@ inputs:
     description: "SpringAI Model to integration test"
     required: true
   maven-properties:
-    description: "Maven properties to pass to the build
+    description: "Maven properties to pass to the build"
     required: false
     default: ""
 

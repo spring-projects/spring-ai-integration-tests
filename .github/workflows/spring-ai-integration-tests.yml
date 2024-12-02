@@ -209,7 +209,7 @@ jobs:
       - name: Integration Test
         uses: ./.github/actions/do-multi-module-test
         with:
-          modules: spring-ai-vector-store/spring-ai-vector-store-chroma, spring-ai-vector-store/spring-ai-vector-store-neo4j, spring-ai-vector-store/spring-ai-vector-store-pgvector, spring-ai-vector-store/spring-ai-vector-store-redis
+          modules: vector-stores/spring-ai-azure-cosmos-db-store,vector-stores/spring-ai-azure-store,vector-stores/spring-ai-cassandra-store,vector-stores/spring-ai-chroma-store,vector-stores/spring-ai-coherence-store,vector-stores/spring-ai-elasticsearch-store,vector-stores/spring-ai-gemfire-store,vector-stores/spring-ai-hanadb-store,vector-stores/spring-ai-mariadb-store,vector-stores/spring-ai-milvus-store,vector-stores/spring-ai-mongodb-atlas-store,vector-stores/spring-ai-neo4j-store,vector-stores/spring-ai-opensearch-store,vector-stores/spring-ai-oracle-store,vector-stores/spring-ai-pgvector-store,vector-stores/spring-ai-pinecone-store,vector-stores/spring-ai-qdrant-store,vector-stores/spring-ai-redis-store,vector-stores/spring-ai-typesense-store,vector-stores/spring-ai-weaviate-store
 
   test-autoconfigure:
     env:
