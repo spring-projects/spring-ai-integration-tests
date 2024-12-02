@@ -122,7 +122,7 @@ jobs:
         id: secret_check
         if: ${{ env.MISTRAL_AI_API_KEY != '' }}
         run: echo "Secrets exist"
-        
+
       - name: Checkout the action
         uses: actions/checkout@v4
 

@@ -2,71 +2,156 @@
 
 This repository contains workflows that define the integration test automation for the Spring AI project.
 
-## Adding secrets
-All environment variables are stored in Github secrets.
+## Adding Secrets
+
+All environment variables are stored in GitHub secrets.
 
 To add or change a secret:
 
-open https://github.com/spring-projects/spring-ai-integration-tests in your browser.
+1. Open [spring-projects/spring-ai-integration-tests](https://github.com/spring-projects/spring-ai-integration-tests) in your browser.
+2. If you have permissions, you will see "Settings" in the toolbar on that page.
+3. Navigate to **Settings** -> **Security** -> **Secrets and variables** -> **Actions**.
+4. Click **New repository secret** to add a new environment variable for the integration test pipeline.
 
-if you have permissions you will see "Setting" in the toolbar on that page
+## Workflow Schedule
 
-Setting -> Security :: Secrets and variables -> Actions
+The integration tests run automatically:
+- At 4:00 UTC on weekdays (Monday through Friday)
+- At 10:00 UTC on weekdays (Monday through Friday)
 
-Click 'New repository secret' to add another environment variable for the integration test pipeline.
+The workflow can also be triggered manually using the workflow_dispatch event.
 
-## Basic Integration Test Job
+## Job Types
 
-Job name and runs in a ubuntu container:
-```yaml
-  test-anthropic:
-    runs-on: ubuntu-latest
-```
+### Basic Integration Test Job
 
-Environment variables needed by the Integration tests:
-```yaml
-    env:
-        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-```
-
-The standard steps to:
-- check for the environment variables in the `env:` section, if any environment variables are missing or do not have a value the job will be failed
-- checkout che springAI source
-- install java 17
-- compile the springAI code without running tests
-- execute the integration test are all in a custom action
+Example of a basic integration test job for testing AI models:
 
 ```yaml
-    steps:
-      - name: Checkout the action
-        uses: actions/checkout@v4
+test-mistral-ai:
+  runs-on: ubuntu-latest
+  env:
+    MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
+  steps:
+    - name: Check secrets
+      id: secret_check
+      if: ${{ env.MISTRAL_AI_API_KEY != '' }}
+      run: echo "Secrets exist"
 
-      - name: Integration Test
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: anthropic
+    - name: Checkout the action
+      uses: actions/checkout@v4
+
+    - name: Integration Test
+      if: steps.secret_check.conclusion == 'success'
+      uses: ./.github/actions/do-integration-test
+      with:
+        model-name: mistral-ai
 ```
 
-The only customization needed is the model name... custom action assumes `models/spring-ai-` so for the above example the model-name is `anthropic` and `models/spring-ai-anthropic` will be integration tested.
-## Autoconfiguration Test
-The autoconfiguration test runs for any of the properties in the `env` section
-and when they have values the environment variable needs to be uncommented to be
-included in the autoconfiguraton test
+The standard steps:
+- Define required environment variables using GitHub secrets
+- Check if required secrets exist and have values
+- Checkout the repository
+- Run the integration test only if all secrets are available
+
+The `do-integration-test` action handles:
+- Checking environment variables
+- Checking out the Spring AI source code
+- Setting up JDK 17 with Maven caching
+- Installing the Spring AI code without running tests
+- Executing the integration tests with retry capability for failing tests
+
+The only customization needed is the model name. The action assumes `models/spring-ai-` prefix, so for the above example with model-name `mistral-ai`, `models/spring-ai-mistral-ai` will be integration tested.
+
+### Multi-Module Test Job
+
+For testing multiple modules in a single job:
 
 ```yaml
-  test-autoconfigure:
-    env:
-      # TODO: uncomment keys that have values
-#      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-      AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
-#      AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME: ${{ secrets.AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME }}
-#      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-#      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
-#      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
-#      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
-#      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-#      STABILITYAI_API_KEY: ${{ secrets.STABILITYAI_API_KEY }}
-    runs-on: ubuntu-latest
+test-vectorstores:
+  runs-on: ubuntu-latest
+  env:
+    DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
+    TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
+    OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
+    OLLAMA_TESTS_ENABLED: true
+  steps:
+    - name: Check secrets
+      id: secret_check
+      if: ${{ env.OPENAI_API_KEY != '' && env.MISTRAL_AI_API_KEY != '' }}
+      run: echo "Secrets exist"
+
+    - uses: actions/checkout@v4
+
+    - name: Configure Testcontainers
+      run: |
+        mkdir -p $HOME
+        echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+
+    - name: Integration Test
+      uses: ./.github/actions/do-multi-module-test
+      with:
+        modules: vector-stores/spring-ai-module1,vector-stores/spring-ai-module2
 ```
+
+The `do-multi-module-test` action is similar to `do-integration-test` but allows testing multiple modules in a single job.
+
+### Autoconfiguration Test
+
+The autoconfiguration test job runs for Spring Boot autoconfiguration testing. Environment variables in the `env` section control which tests are enabled:
+
+```yaml
+test-autoconfigure:
+  env:
+    AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+    AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+    # Additional keys can be uncommented when available
+  runs-on: ubuntu-latest
+```
+
+## Required Environment Variables
+
+The following environment variables are needed for various tests:
+
+### Vector Store Tests
+```
+OPENAI_API_KEY
+MISTRAL_AI_API_KEY
+OLLAMA_TESTS_ENABLED
+```
+
+### AI Model Tests
+```
+AZURE_OPENAI_API_KEY
+AZURE_OPENAI_ENDPOINT
+AZURE_OPENAI_TRANSCRIPTION_API_KEY
+AZURE_OPENAI_TRANSCRIPTION_ENDPOINT
+AZURE_OPENAI_IMAGE_API_KEY
+AZURE_OPENAI_IMAGE_ENDPOINT
+MISTRAL_AI_API_KEY
+```
+
+## Docker and TestContainers Configuration
+
+For jobs using Docker or TestContainers, the following environment variables are used to reduce log verbosity:
+```yaml
+env:
+  DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
+  TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
+```
+
+TestContainers reuse is enabled with:
+```bash
+echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+```
+
+## Additional Tests
+
+The workflow also includes tests for:
+- Spring AI Integration Tests
+- Docker Compose Support
+- TestContainers Support
+- Spring Cloud Bindings
+
+Each of these tests uses the multi-module test action with appropriate module paths.
