@@ -258,12 +258,19 @@ jobs:
     env:
       DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
+      - name: Check secrets
+        id: secret_check
+        if: ${{ env.OPENAI_API_KEY != '' }}
+        run: echo "Secrets exist"
+
       - uses: actions/checkout@v4
       - name: Configure Testcontainers
         run: |
           mkdir -p $HOME
           echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+
       - name: Integration Test
         uses: ./.github/actions/do-multi-module-test
         with:
