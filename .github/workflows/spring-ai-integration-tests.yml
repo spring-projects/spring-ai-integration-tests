@@ -113,19 +113,23 @@ jobs:
 #        with:
 #          model-name: huggingface
 #
-#  test-mistral-ai:
-#    runs-on: ubuntu-latest
-#    env:
-#      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
-#    if: ${{ env.MISTRAL_AI_API_KEY != '' }}
-#    steps:
-#      - name: Checkout the action
-#        uses: actions/checkout@v4
-#
-#      - name: Integration Test
-#        uses: ./.github/actions/do-integration-test
-#        with:
-#          model-name: mistral-ai
+  test-mistral-ai:
+    runs-on: ubuntu-latest
+    env:
+      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
+    steps:
+      - name: Check secrets
+        id: secret_check
+        if: ${{ env.MISTRAL_AI_API_KEY != '' }}
+        run: echo "Secrets exist"
+        
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: mistral-ai
 
 # Removed since not able to get keys from ORACLE
 # When keys are available uncomment this code and verify no other structural changes in the other jobs
@@ -200,12 +204,24 @@ jobs:
 
   test-vectorstores:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
+      TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
+      OLLAMA_TESTS_ENABLED: true
     steps:
+      - name: Check secrets
+        id: secret_check
+        if: ${{ env.OPENAI_API_KEY != '' && env.MISTRAL_AI_API_KEY != '' }}
+        run: echo "Secrets exist"
+
       - uses: actions/checkout@v4
       - name: Configure Testcontainers
         run: |
           mkdir -p $HOME
           echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+
       - name: Integration Test
         uses: ./.github/actions/do-multi-module-test
         with:
@@ -239,6 +255,9 @@ jobs:
 
   test-spring-ai-integration:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
+      TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
     steps:
       - uses: actions/checkout@v4
       - name: Configure Testcontainers
@@ -252,6 +271,9 @@ jobs:
 
   test-docker-compose:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
+      TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
     steps:
       - uses: actions/checkout@v4
       - name: Configure Testcontainers
@@ -265,6 +287,9 @@ jobs:
 
   test-testcontainers:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
+      TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
     steps:
       - uses: actions/checkout@v4
       - name: Configure Testcontainers
