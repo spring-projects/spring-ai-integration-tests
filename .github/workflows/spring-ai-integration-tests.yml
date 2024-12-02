@@ -198,6 +198,19 @@ jobs:
 #        with:
 #          model-name: vertex-ai-gemini
 
+  test-vectorstores:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Testcontainers
+        run: |
+          mkdir -p $HOME
+          echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+      - name: Integration Test
+        uses: ./.github/actions/do-multi-module-test
+        with:
+          modules: spring-ai-vector-store/spring-ai-vector-store-chroma, spring-ai-vector-store/spring-ai-vector-store-neo4j, spring-ai-vector-store/spring-ai-vector-store-pgvector, spring-ai-vector-store/spring-ai-vector-store-redis
+
   test-autoconfigure:
     env:
       # TODO: uncomment keys that have values

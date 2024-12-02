@@ -1,12 +1,12 @@
-name: "Setup for SpringAI tests"
-description: "Setup For SpringAI tests"
+name: "Setup for SpringAI Multi-Module Tests"
+description: "Setup For SpringAI Multi-Module Tests"
 
 inputs:
-  model-name:
-    description: "SpringAI Model to integration test"
+  modules:
+    description: "Comma-separated list of modules to test"
     required: true
   maven-properties:
-    description: "Maven properties to pass to the build
+    description: "Maven properties to pass to the build"
     required: false
     default: ""
 
@@ -40,6 +40,6 @@ runs:
       shell: bash
       run: cd spring-ai && ./mvnw install -DskipTests
 
-    - name: Run ${{ inputs.model-name }} model tests
+    - name: Run integration tests
       shell: bash
-      run: cd spring-ai && ./mvnw -pl models/spring-ai-${{ inputs.model-name }} -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && ./mvnw -pl ${{ inputs.modules }} -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
