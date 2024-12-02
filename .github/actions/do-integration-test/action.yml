@@ -38,8 +38,8 @@ runs:
 
     - name: Install
       shell: bash
-      run: cd spring-ai && ./mvnw install -DskipTests
+      run: cd spring-ai && ./mvnw -ntp install -DskipTests
 
     - name: Run ${{ inputs.model-name }} model tests
       shell: bash
-      run: cd spring-ai && ./mvnw -pl models/spring-ai-${{ inputs.model-name }} -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && ./mvnw -ntp -pl models/spring-ai-${{ inputs.model-name }} -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify

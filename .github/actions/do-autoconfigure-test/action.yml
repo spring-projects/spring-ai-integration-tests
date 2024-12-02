@@ -29,8 +29,8 @@ runs:
 
     - name: Install
       shell: bash
-      run: cd spring-ai && ./mvnw install -DskipTests
+      run: cd spring-ai && ./mvnw -ntp install -DskipTests
 
     - name: Run Spring AI Autoconfigure test
       shell: bash
-      run: cd spring-ai && ./mvnw -pl spring-ai-spring-boot-autoconfigure -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && ./mvnw -ntp -pl spring-ai-spring-boot-autoconfigure -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
