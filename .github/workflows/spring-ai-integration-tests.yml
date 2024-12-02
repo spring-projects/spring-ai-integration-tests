@@ -235,3 +235,56 @@ jobs:
 
       - name: Autoconfigure Test
         uses: ./.github/actions/do-autoconfigure-test
+
+
+  test-spring-ai-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Testcontainers
+        run: |
+          mkdir -p $HOME
+          echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+      - name: Integration Test
+        uses: ./.github/actions/do-multi-module-test
+        with:
+          modules: spring-ai-integration-tests
+
+  test-docker-compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Testcontainers
+        run: |
+          mkdir -p $HOME
+          echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+      - name: Integration Test
+        uses: ./.github/actions/do-multi-module-test
+        with:
+          modules: spring-ai-spring-boot-docker-compose
+
+  test-testcontainers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Testcontainers
+        run: |
+          mkdir -p $HOME
+          echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+      - name: Integration Test
+        uses: ./.github/actions/do-multi-module-test
+        with:
+          modules: spring-ai-spring-boot-testcontainers
+
+  test-cloud-bindings:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Testcontainers
+        run: |
+          mkdir -p $HOME
+          echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+      - name: Integration Test
+        uses: ./.github/actions/do-multi-module-test
+        with:
+          modules: spring-ai-spring-cloud-bindings
