@@ -288,6 +288,10 @@ jobs:
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
     steps:
       - uses: actions/checkout@v4
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          large-packages: false
       - name: Configure Testcontainers
         run: |
           mkdir -p $HOME
