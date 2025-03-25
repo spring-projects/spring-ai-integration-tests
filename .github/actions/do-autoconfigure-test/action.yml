@@ -210,3 +210,11 @@ runs:
     - name: Run Spring AI Autoconfigure Weaviate Vector Store test
       shell: bash
       run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-weaviate -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+
+    - name: Run Spring AI Autoconfigure MCP Client test
+      shell: bash
+      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/mcp/spring-ai-autoconfigure-mcp-client -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+
+    - name: Run Spring AI Autoconfigure MCP Server test
+      shell: bash
+      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/mcp/spring-ai-autoconfigure-mcp-server -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
