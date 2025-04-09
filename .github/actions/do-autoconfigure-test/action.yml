@@ -51,9 +51,17 @@ runs:
       shell: bash
       run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/chat/client/spring-ai-autoconfigure-model-chat-client -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
 
-    - name: Run Spring AI Autoconfigure Chat memory test
+    - name: Run Spring AI Autoconfigure Neo4j Chat memory test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/chat/memory/spring-ai-autoconfigure-model-chat-memory -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/chat/memory/spring-ai-autoconfigure-model-chat-memory-neo4j -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+
+    - name: Run Spring AI Autoconfigure Cassandra Chat memory test
+      shell: bash
+      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/chat/memory/spring-ai-autoconfigure-model-chat-memory-cassandra -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
+
+    - name: Run Spring AI Autoconfigure Neo4j JDBC Chat memory test
+      shell: bash
+      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/chat/memory/spring-ai-autoconfigure-model-chat-memory-jdbc -Pintegration-tests -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Tooling test
       shell: bash
