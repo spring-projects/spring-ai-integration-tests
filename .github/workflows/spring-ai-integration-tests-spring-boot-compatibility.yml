@@ -1,0 +1,368 @@
+name: Spring AI Integration Tests (Spring Boot Compatibility)
+run-name: Spring AI Integration Tests (Spring Boot Compatibility)
+on:
+  workflow_dispatch:
+    inputs:
+      springBootVersion:
+        description: "Spring Boot version"
+        required: true
+  schedule:
+    - cron: '0 4 * * 1-5'
+    - cron: '0 10 * * 1-5'
+
+jobs:
+
+  test-ollama:
+    runs-on: ubuntu-latest
+    services:
+      ollama:
+        image: ollama/ollama:latest
+        ports:
+          - 11434:11434
+    env:
+      OLLAMA_WITH_REUSE: true
+    steps:
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
+#      - name: Install Ollama
+#        run: |
+#          curl -fsSL https://ollama.com/install.sh | sh
+#          ollama serve &
+#          sleep 10  # Give Ollama time to start up
+
+      - name: Capture Spring Boot version
+        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
+
+      - name: Configure Testcontainers
+        run: |
+          mkdir -p $HOME
+          echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties       
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: ollama
+          maven-properties: "-Dskip.model.ollama=false -Dspring-boot.version=$SPRING_BOOT_VERSION"
+
+# Anthrohpic is overloaded :(
+#
+#  test-anthropic:
+#    runs-on: ubuntu-latest
+#    env:
+#      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+#    steps:
+#      - name: Check secret
+#        id: secret_check
+#        if: ${{ env.ANTHROPIC_API_KEY != '' }}
+#        run: echo "Secret exists"
+#
+#      - uses: actions/checkout@v4
+#        if: steps.secret_check.conclusion == 'success'
+#
+#      - name: Integration Test
+#        if: steps.secret_check.conclusion == 'success'
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: anthropic
+
+  test-azure-openai:
+    runs-on: ubuntu-latest
+    env:
+      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+      AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+      AZURE_OPENAI_TRANSCRIPTION_API_KEY: ${{ secrets.AZURE_OPENAI_TRANSCRIPTION_API_KEY }}
+      AZURE_OPENAI_TRANSCRIPTION_ENDPOINT: ${{ secrets.AZURE_OPENAI_TRANSCRIPTION_ENDPOINT }}
+      AZURE_OPENAI_IMAGE_API_KEY: ${{ secrets.AZURE_OPENAI_IMAGE_API_KEY }}
+      AZURE_OPENAI_IMAGE_ENDPOINT: ${{ secrets.AZURE_OPENAI_IMAGE_ENDPOINT }}
+    steps:
+      - name: Check secrets
+        id: secret_check
+        if: ${{ env.AZURE_OPENAI_API_KEY != '' && env.AZURE_OPENAI_ENDPOINT != '' && env.AZURE_OPENAI_TRANSCRIPTION_API_KEY != '' && env.AZURE_OPENAI_TRANSCRIPTION_ENDPOINT != '' && env.AZURE_OPENAI_IMAGE_API_KEY != '' && env.AZURE_OPENAI_IMAGE_ENDPOINT != '' }}
+        run: echo "Secrets exist"
+
+      - uses: actions/checkout@v4
+        if: steps.secret_check.conclusion == 'success'
+
+      - name: Capture Spring Boot version
+        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
+
+      - name: Integration Test
+        if: steps.secret_check.conclusion == 'success'
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: azure-openai
+          maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+
+#  test-bedrock:
+#    runs-on: ubuntu-latest
+#    if: ${{ secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != '' }}
+#    env:
+#      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: bedrock
+
+#  test-huggingface:
+#    runs-on: ubuntu-latest
+#    env:
+#      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
+#      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
+#    if: ${{ env.HUGGINGFACE_API_KEY != '' && env.HUGGINGFACE_CHAT_URL != '' }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: huggingface
+#
+  test-mistral-ai:
+    runs-on: ubuntu-latest
+    env:
+      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
+    steps:
+      - name: Check secrets
+        id: secret_check
+        if: ${{ env.MISTRAL_AI_API_KEY != '' }}
+        run: echo "Secrets exist"
+
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
+      - name: Capture Spring Boot version
+        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: mistral-ai
+          maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+
+# Removed since not able to get keys from ORACLE
+# When keys are available uncomment this code and verify no other structural changes in the other jobs
+#  test-oci-genai:
+#    runs-on: ubuntu-latest
+#    env:
+#      OCI_COMPARTMENT_ID_KEY: ${{ secrets.OCI_COMPARTMENT_ID_KEY }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: oci-genai
+
+#  test-openai:
+#    runs-on: ubuntu-latest
+#    env:
+#      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+#    if: ${{ env.OPENAI_API_KEY != '' }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: openai
+#
+#  test-stability-ai:
+#    runs-on: ubuntu-latest
+#    env:
+#      STABILITYAI_API_KEY: ${{ secrets.STABILITYAI_API_KEY }}
+#    if: ${{ env.STABILITYAI_API_KEY != '' }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: stability-ai
+
+#  test-vertex-ai-embedding:
+#    runs-on: ubuntu-latest
+#    env:
+#      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
+#      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: vertex-ai-embedding
+#
+#  test-vertex-ai-gemini:
+#    runs-on: ubuntu-latest
+#    env:
+#      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
+#      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
+#    steps:
+#      - name: Checkout the action
+#        uses: actions/checkout@v4
+#
+#      - name: Integration Test
+#        uses: ./.github/actions/do-integration-test
+#        with:
+#          model-name: vertex-ai-gemini
+
+  test-vectorstores:
+    runs-on: ubuntu-latest
+    services:
+      ollama:
+        image: ollama/ollama:latest
+        ports:
+          - 11434:11434
+    env:
+      DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
+      TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
+      OLLAMA_TESTS_ENABLED: true
+    steps:
+      - name: Check secrets
+        id: secret_check
+        if: ${{ env.OPENAI_API_KEY != '' && env.MISTRAL_AI_API_KEY != '' }}
+        run: echo "Secrets exist"
+
+      - name: Capture Spring Boot version
+        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
+
+      - uses: actions/checkout@v4
+      - name: Configure Testcontainers
+        run: |
+          mkdir -p $HOME
+          echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+
+      - name: Integration Test
+        uses: ./.github/actions/do-multi-module-test
+        with:
+          modules: vector-stores/spring-ai-azure-cosmos-db-store,vector-stores/spring-ai-azure-store,vector-stores/spring-ai-cassandra-store,vector-stores/spring-ai-chroma-store,vector-stores/spring-ai-coherence-store,vector-stores/spring-ai-elasticsearch-store,vector-stores/spring-ai-gemfire-store,vector-stores/spring-ai-hanadb-store,vector-stores/spring-ai-mariadb-store,vector-stores/spring-ai-milvus-store,vector-stores/spring-ai-mongodb-atlas-store,vector-stores/spring-ai-neo4j-store,vector-stores/spring-ai-opensearch-store,vector-stores/spring-ai-oracle-store,vector-stores/spring-ai-pgvector-store,vector-stores/spring-ai-pinecone-store,vector-stores/spring-ai-qdrant-store,vector-stores/spring-ai-redis-store,vector-stores/spring-ai-typesense-store,vector-stores/spring-ai-weaviate-store
+          maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+
+  test-autoconfigure:
+    env:
+      # TODO: uncomment keys that have values
+#      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+      AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+#      AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME: ${{ secrets.AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME }}
+#      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+#      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
+#      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
+#      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
+#      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+#      PALM_API_KEY: ${{ secrets.PALM_API_KEY }}
+#      STABILITYAI_API_KEY: ${{ secrets.STABILITYAI_API_KEY }}
+#      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
+#      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
+      - name: Capture Spring Boot version
+        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
+
+      - name: Autoconfigure Test
+        uses: ./.github/actions/do-autoconfigure-test
+
+
+  test-spring-ai-integration:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
+      TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - name: Check secrets
+        id: secret_check
+        if: ${{ env.OPENAI_API_KEY != '' }}
+        run: echo "Secrets exist"
+
+      - uses: actions/checkout@v4
+      - name: Configure Testcontainers
+        run: |
+          mkdir -p $HOME
+          echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+
+      - name: Capture Spring Boot version
+        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
+
+      - name: Integration Test
+        uses: ./.github/actions/do-multi-module-test
+        with:
+          modules: spring-ai-integration-tests
+          maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+
+  test-docker-compose:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
+      TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          large-packages: false
+
+      - name: Capture Spring Boot version
+        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
+
+      - name: Configure Testcontainers
+        run: |
+          mkdir -p $HOME
+          echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+      - name: Integration Test
+        uses: ./.github/actions/do-multi-module-test
+        with:
+          modules: spring-ai-spring-boot-docker-compose
+          maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+
+  test-testcontainers:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
+      TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Testcontainers
+        run: |
+          mkdir -p $HOME
+          echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+      - name: Capture Spring Boot version
+        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
+      - name: Integration Test
+        uses: ./.github/actions/do-multi-module-test
+        with:
+          modules: spring-ai-spring-boot-testcontainers
+          maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+
+  test-cloud-bindings:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Testcontainers
+        run: |
+          mkdir -p $HOME
+          echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+      - name: Capture Spring Boot version
+        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
+      - name: Integration Test
+        uses: ./.github/actions/do-multi-module-test
+        with:
+          modules: spring-ai-spring-cloud-bindings
+          maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
