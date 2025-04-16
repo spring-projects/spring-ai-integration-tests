@@ -29,200 +29,200 @@ runs:
 
     - name: Install
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp install -DskipTests
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp install -DskipTests ${{ inputs.maven-properties }}
 
     - name: Run Spring AI Retry Autoconfigure test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/common/spring-ai-autoconfigure-retry -Pintegration-tests ${{ inputs.maven-properties }} ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/common/spring-ai-autoconfigure-retry -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Chat Observation test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/chat/observation/spring-ai-autoconfigure-model-chat-observation -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/chat/observation/spring-ai-autoconfigure-model-chat-observation -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Embedding Observation test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/embedding/observation/spring-ai-autoconfigure-model-embedding-observation -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/embedding/observation/spring-ai-autoconfigure-model-embedding-observation -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Image Observation test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/image/observation/spring-ai-autoconfigure-model-image-observation -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/image/observation/spring-ai-autoconfigure-model-image-observation -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Chat client test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/chat/client/spring-ai-autoconfigure-model-chat-client -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/chat/client/spring-ai-autoconfigure-model-chat-client -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Neo4j Chat memory test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/chat/memory/spring-ai-autoconfigure-model-chat-memory-neo4j -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/chat/memory/spring-ai-autoconfigure-model-chat-memory-neo4j -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Cassandra Chat memory test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/chat/memory/spring-ai-autoconfigure-model-chat-memory-cassandra -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/chat/memory/spring-ai-autoconfigure-model-chat-memory-cassandra -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Neo4j JDBC Chat memory test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/chat/memory/spring-ai-autoconfigure-model-chat-memory-jdbc -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/chat/memory/spring-ai-autoconfigure-model-chat-memory-jdbc -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Tooling test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/tool/spring-ai-autoconfigure-model-tool -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/tool/spring-ai-autoconfigure-model-tool -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Anthropic Model test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-anthropic -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-anthropic -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Azure OpenAI test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-azure-openai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-azure-openai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Bedrock AI test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-bedrock-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-bedrock-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Huggingface test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-huggingface -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-huggingface -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Minimax test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-minimax -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-minimax -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Mistral AI test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-mistral-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-mistral-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Moonshot test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-moonshot -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-moonshot -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure OCI GenAI test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-oci-genai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-oci-genai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Ollama test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-ollama -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-ollama -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure OpenAI test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-openai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-openai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure PostgresML Embedding test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-postgresml-embedding -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-postgresml-embedding -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure QianFan test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-qianfan -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-qianfan -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Stability AI test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-stability-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-stability-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Transformers test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-transformers -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-transformers -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Vertex AI test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-vertex-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-vertex-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Watsonx AI test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-watsonx-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-watsonx-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure ZhipuAI test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-zhipuai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-zhipuai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Azure vector store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-azure -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-azure -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Azure Cosmos DB test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-azure-cosmos-db -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-azure-cosmos-db -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Cassandra Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-cassandra -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-cassandra -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Chroma Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-chroma -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-chroma -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Couchbase Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-couchbase -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-couchbase -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure ElasticSearch Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-elasticsearch -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-elasticsearch -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure GemFire Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-gemfire -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-gemfire -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Hanadb Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-hanadb -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-hanadb -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Mariadb Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-mariadb -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-mariadb -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Milvus Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-milvus -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-milvus -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure MongoDB Atlas Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-mongodb-atlas -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-mongodb-atlas -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Neo4j Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-neo4j -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-neo4j -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Vector Store Observation test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-observation -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-observation -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Opensearch Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-opensearch -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-opensearch -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Oracle Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-oracle -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-oracle -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Pgvector test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-pgvector -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-pgvector -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Pinecone Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-pinecone -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-pinecone -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Qdrant Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-qdrant -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-qdrant -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Redis Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-redis -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-redis -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Typesense Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-typesense -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-typesense -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Weaviate Vector Store test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-weaviate -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-weaviate -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure MCP Client test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/mcp/spring-ai-autoconfigure-mcp-client -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/mcp/spring-ai-autoconfigure-mcp-client -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure MCP Server test
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl auto-configurations/mcp/spring-ai-autoconfigure-mcp-server -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/mcp/spring-ai-autoconfigure-mcp-server -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify

@@ -42,4 +42,4 @@ runs:
 
     - name: Run ${{ inputs.model-name }} model tests
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp -pl models/spring-ai-${{ inputs.model-name }} -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl models/spring-ai-${{ inputs.model-name }} -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
