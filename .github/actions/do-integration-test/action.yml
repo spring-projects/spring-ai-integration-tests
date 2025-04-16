@@ -38,7 +38,7 @@ runs:
 
     - name: Install
       shell: bash
-      run: cd spring-ai && ./mvnw -ntp install -DskipTests
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp install -DskipTests ${{ inputs.maven-properties }}
 
     - name: Run ${{ inputs.model-name }} model tests
       shell: bash
