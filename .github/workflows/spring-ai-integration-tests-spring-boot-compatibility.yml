@@ -278,6 +278,8 @@ jobs:
 
       - name: Autoconfigure Test
         uses: ./.github/actions/do-autoconfigure-test
+        with:
+          maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
 
 
   test-spring-ai-integration:
