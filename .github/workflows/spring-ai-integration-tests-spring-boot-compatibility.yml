@@ -6,9 +6,6 @@ on:
       springBootVersion:
         description: "Spring Boot version"
         required: true
-  schedule:
-    - cron: '0 4 * * 1-5'
-    - cron: '0 10 * * 1-5'
 
 jobs:
 
