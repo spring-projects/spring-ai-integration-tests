@@ -119,10 +119,6 @@ runs:
       shell: bash
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-vertex-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
-    - name: Run Spring AI Autoconfigure Watsonx AI test
-      shell: bash
-      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-watsonx-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
-
     - name: Run Spring AI Autoconfigure ZhipuAI test
       shell: bash
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-zhipuai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
