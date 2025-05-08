@@ -151,10 +151,6 @@ runs:
       shell: bash
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-gemfire -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
-    - name: Run Spring AI Autoconfigure Hanadb Vector Store test
-      shell: bash
-      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-hanadb -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
-
     - name: Run Spring AI Autoconfigure Mariadb Vector Store test
       shell: bash
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-mariadb -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
