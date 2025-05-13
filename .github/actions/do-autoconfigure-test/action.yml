@@ -51,17 +51,17 @@ runs:
       shell: bash
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/chat/client/spring-ai-autoconfigure-model-chat-client -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
-    - name: Run Spring AI Autoconfigure Neo4j Chat memory test
+    - name: Run Spring AI Autoconfigure Neo4j Chat memory repository test
       shell: bash
-      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/chat/memory/spring-ai-autoconfigure-model-chat-memory-neo4j -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/chat/memory/repository/spring-ai-autoconfigure-model-chat-memory-repository-neo4j -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
-    - name: Run Spring AI Autoconfigure Cassandra Chat memory test
+    - name: Run Spring AI Autoconfigure Cassandra Chat memory repository test
       shell: bash
-      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/chat/memory/spring-ai-autoconfigure-model-chat-memory-cassandra -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/chat/memory/repository/spring-ai-autoconfigure-model-chat-memory-repository-cassandra -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
-    - name: Run Spring AI Autoconfigure Neo4j JDBC Chat memory test
+    - name: Run Spring AI Autoconfigure JDBC Chat memory repository test
       shell: bash
-      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/chat/memory/spring-ai-autoconfigure-model-chat-memory-jdbc -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/chat/memory/repository/spring-ai-autoconfigure-model-chat-memory-repository-jdbc -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Tooling test
       shell: bash
