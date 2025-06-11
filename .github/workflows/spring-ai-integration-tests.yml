@@ -143,6 +143,28 @@ jobs:
           model-name: mistral-ai
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
+  test-elevenlabs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main ]
+    env:
+      ELEVEN_LABS_API_KEY: ${{ secrets.ELEVEN_LABS_API_KEY }}
+    steps:
+      - name: Check secrets
+        id: secret_check
+        if: ${{ env.ELEVEN_LABS_API_KEY != '' }}
+        run: echo "Secrets exist"
+
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: elevenlabs
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
+
 # Removed since not able to get keys from ORACLE
 # When keys are available uncomment this code and verify no other structural changes in the other jobs
 #  test-oci-genai:
