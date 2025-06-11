@@ -10,6 +10,9 @@ jobs:
 
   test-ollama:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     services:
       ollama:
         image: ollama/ollama:latest
@@ -37,6 +40,7 @@ jobs:
         with:
           model-name: ollama
           maven-properties: "-Dskip.model.ollama=false"
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
 # Anthrohpic is overloaded :(
 #
@@ -61,6 +65,9 @@ jobs:
 
   test-azure-openai:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     env:
       AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
@@ -82,6 +89,7 @@ jobs:
         uses: ./.github/actions/do-integration-test
         with:
           model-name: azure-openai
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
 #  test-bedrock:
 #    runs-on: ubuntu-latest
@@ -115,6 +123,9 @@ jobs:
 #
   test-mistral-ai:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     env:
       MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
     steps:
@@ -130,6 +141,7 @@ jobs:
         uses: ./.github/actions/do-integration-test
         with:
           model-name: mistral-ai
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
 # Removed since not able to get keys from ORACLE
 # When keys are available uncomment this code and verify no other structural changes in the other jobs
@@ -204,6 +216,9 @@ jobs:
 
   test-vectorstores:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     services:
       ollama:
         image: ollama/ollama:latest
@@ -231,6 +246,7 @@ jobs:
         uses: ./.github/actions/do-multi-module-test
         with:
           modules: vector-stores/spring-ai-azure-cosmos-db-store,vector-stores/spring-ai-azure-store,vector-stores/spring-ai-cassandra-store,vector-stores/spring-ai-chroma-store,vector-stores/spring-ai-coherence-store,vector-stores/spring-ai-elasticsearch-store,vector-stores/spring-ai-gemfire-store,vector-stores/spring-ai-hanadb-store,vector-stores/spring-ai-mariadb-store,vector-stores/spring-ai-milvus-store,vector-stores/spring-ai-mongodb-atlas-store,vector-stores/spring-ai-neo4j-store,vector-stores/spring-ai-opensearch-store,vector-stores/spring-ai-oracle-store,vector-stores/spring-ai-pgvector-store,vector-stores/spring-ai-pinecone-store,vector-stores/spring-ai-qdrant-store,vector-stores/spring-ai-redis-store,vector-stores/spring-ai-typesense-store,vector-stores/spring-ai-weaviate-store
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-autoconfigure:
     env:
@@ -250,16 +266,24 @@ jobs:
 #      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
 #      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     steps:
       - name: Checkout the action
         uses: actions/checkout@v4
 
       - name: Autoconfigure Test
         uses: ./.github/actions/do-autoconfigure-test
+        with:
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
 
   test-spring-ai-integration:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     env:
       DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
@@ -280,9 +304,13 @@ jobs:
         uses: ./.github/actions/do-multi-module-test
         with:
           modules: spring-ai-integration-tests
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-docker-compose:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     env:
       DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
@@ -300,9 +328,13 @@ jobs:
         uses: ./.github/actions/do-multi-module-test
         with:
           modules: spring-ai-spring-boot-docker-compose
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-testcontainers:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     env:
       DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
@@ -316,9 +348,13 @@ jobs:
         uses: ./.github/actions/do-multi-module-test
         with:
           modules: spring-ai-spring-boot-testcontainers
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-cloud-bindings:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     steps:
       - uses: actions/checkout@v4
       - name: Configure Testcontainers
@@ -329,3 +365,4 @@ jobs:
         uses: ./.github/actions/do-multi-module-test
         with:
           modules: spring-ai-spring-cloud-bindings
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}

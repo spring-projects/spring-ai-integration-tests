@@ -12,6 +12,9 @@ inputs:
 
 runs:
   using: "composite"
+  strategy:
+    matrix:
+      spring_ai_branch: [ main, 1.0.x ]
   steps:
     - name: Check environment
       uses: actions/github-script@v7
@@ -26,7 +29,7 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: spring-projects/spring-ai
-        ref: refs/heads/main
+        ref: ${{ inputs.spring-ai-branch }}
         path: spring-ai
 
     - name: Set up JDK 17
