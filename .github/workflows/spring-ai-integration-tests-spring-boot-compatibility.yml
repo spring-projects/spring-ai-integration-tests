@@ -11,6 +11,9 @@ jobs:
 
   test-ollama:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     services:
       ollama:
         image: ollama/ollama:latest
@@ -41,30 +44,37 @@ jobs:
         with:
           model-name: ollama
           maven-properties: "-Dskip.model.ollama=false -Dspring-boot.version=$SPRING_BOOT_VERSION"
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
-# Anthrohpic is overloaded :(
-#
-#  test-anthropic:
-#    runs-on: ubuntu-latest
-#    env:
-#      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-#    steps:
-#      - name: Check secret
-#        id: secret_check
-#        if: ${{ env.ANTHROPIC_API_KEY != '' }}
-#        run: echo "Secret exists"
-#
-#      - uses: actions/checkout@v4
-#        if: steps.secret_check.conclusion == 'success'
-#
-#      - name: Integration Test
-#        if: steps.secret_check.conclusion == 'success'
-#        uses: ./.github/actions/do-integration-test
-#        with:
-#          model-name: anthropic
+
+  test-anthropic:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - name: Check secret
+        id: secret_check
+        if: ${{ env.ANTHROPIC_API_KEY != '' }}
+        run: echo "Secret exists"
+
+      - uses: actions/checkout@v4
+        if: steps.secret_check.conclusion == 'success'
+
+      - name: Integration Test
+        if: steps.secret_check.conclusion == 'success'
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: anthropic
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-azure-openai:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     env:
       AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
@@ -90,6 +100,7 @@ jobs:
         with:
           model-name: azure-openai
           maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
 #  test-bedrock:
 #    runs-on: ubuntu-latest
@@ -123,6 +134,9 @@ jobs:
 #
   test-mistral-ai:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     env:
       MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
     steps:
@@ -142,6 +156,7 @@ jobs:
         with:
           model-name: mistral-ai
           maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
 # Removed since not able to get keys from ORACLE
 # When keys are available uncomment this code and verify no other structural changes in the other jobs
@@ -216,6 +231,9 @@ jobs:
 
   test-vectorstores:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     services:
       ollama:
         image: ollama/ollama:latest
@@ -247,6 +265,7 @@ jobs:
         with:
           modules: vector-stores/spring-ai-azure-cosmos-db-store,vector-stores/spring-ai-azure-store,vector-stores/spring-ai-cassandra-store,vector-stores/spring-ai-chroma-store,vector-stores/spring-ai-coherence-store,vector-stores/spring-ai-elasticsearch-store,vector-stores/spring-ai-gemfire-store,vector-stores/spring-ai-hanadb-store,vector-stores/spring-ai-mariadb-store,vector-stores/spring-ai-milvus-store,vector-stores/spring-ai-mongodb-atlas-store,vector-stores/spring-ai-neo4j-store,vector-stores/spring-ai-opensearch-store,vector-stores/spring-ai-oracle-store,vector-stores/spring-ai-pgvector-store,vector-stores/spring-ai-pinecone-store,vector-stores/spring-ai-qdrant-store,vector-stores/spring-ai-redis-store,vector-stores/spring-ai-typesense-store,vector-stores/spring-ai-weaviate-store
           maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-autoconfigure:
     env:
@@ -256,7 +275,7 @@ jobs:
       AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
 #      AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME: ${{ secrets.AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME }}
-#      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 #      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
 #      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
 #      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
@@ -266,6 +285,9 @@ jobs:
 #      VERTEX_AI_GEMINI_PROJECT_ID: ${{ secrets.VERTEX_AI_GEMINI_PROJECT_ID }}
 #      VERTEX_AI_GEMINI_LOCATION: ${{ secrets.VERTEX_AI_GEMINI_LOCATION }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     steps:
       - name: Checkout the action
         uses: actions/checkout@v4
@@ -277,10 +299,14 @@ jobs:
         uses: ./.github/actions/do-autoconfigure-test
         with:
           maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
 
   test-spring-ai-integration:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     env:
       DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
@@ -305,9 +331,13 @@ jobs:
         with:
           modules: spring-ai-integration-tests
           maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-docker-compose:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     env:
       DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
@@ -330,9 +360,13 @@ jobs:
         with:
           modules: spring-ai-spring-boot-docker-compose
           maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-testcontainers:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     env:
       DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
@@ -349,9 +383,13 @@ jobs:
         with:
           modules: spring-ai-spring-boot-testcontainers
           maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-cloud-bindings:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main, 1.0.x ]
     steps:
       - uses: actions/checkout@v4
       - name: Configure Testcontainers
@@ -365,3 +403,4 @@ jobs:
         with:
           modules: spring-ai-spring-cloud-bindings
           maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
