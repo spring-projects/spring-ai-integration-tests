@@ -225,4 +225,20 @@ runs:
 
     - name: Run Spring AI Autoconfigure MCP Server test
       shell: bash
+      if: ${{ inputs.spring-ai-branch == '1.0.x' }}
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/mcp/spring-ai-autoconfigure-mcp-server -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+
+    - name: Run Spring AI Autoconfigure MCP common Server test
+      shell: bash
+      if: ${{ inputs.spring-ai-branch == 'main' }}
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/mcp/spring-ai-autoconfigure-mcp-server-common -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+
+    - name: Run Spring AI Autoconfigure MCP Webflux Server test
+      shell: bash
+      if: ${{ inputs.spring-ai-branch == 'main' }}
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/mcp/spring-ai-autoconfigure-mcp-server-webflux -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
+
+    - name: Run Spring AI Autoconfigure MCP WebMVC Server test
+      shell: bash
+      if: ${{ inputs.spring-ai-branch == 'main' }}
+      run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/mcp/spring-ai-autoconfigure-mcp-server-webmvc -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
