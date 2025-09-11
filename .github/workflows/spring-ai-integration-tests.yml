@@ -2,17 +2,38 @@ name: Spring AI Integration Tests
 run-name: Spring AI Integration Tests
 on:
   workflow_dispatch:
+    inputs:
+      spring_ai_branches:
+        description: 'Spring AI branches to test (comma-separated)'
+        required: false
+        default: 'main,1.0.x'
+        type: string
   schedule:
     - cron: '0 4 * * 1-5'
     - cron: '0 10 * * 1-5'
 
 jobs:
 
+  setup-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      spring_ai_branches: ${{ steps.setup.outputs.spring_ai_branches }}
+    steps:
+      - id: setup
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            branches="${{ inputs.spring_ai_branches }}"
+          else
+            branches="main,1.0.x"
+          fi
+          echo "spring_ai_branches=[\"$(echo $branches | sed 's/,/","/g')\"]" >> $GITHUB_OUTPUT
+
   test-ollama:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     services:
       ollama:
         image: ollama/ollama:latest
@@ -43,10 +64,11 @@ jobs:
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-anthropic:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
@@ -66,10 +88,11 @@ jobs:
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-azure-openai:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     env:
       AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
@@ -124,10 +147,11 @@ jobs:
 #          model-name: huggingface
 #
   test-mistral-ai:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     env:
       MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
     steps:
@@ -239,10 +263,11 @@ jobs:
 #          model-name: vertex-ai-gemini
 
   test-vectorstores:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     services:
       ollama:
         image: ollama/ollama:latest
@@ -273,6 +298,7 @@ jobs:
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-autoconfigure:
+    needs: setup-matrix
     env:
       # TODO: uncomment keys that have values
 #      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -292,7 +318,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     steps:
       - name: Checkout the action
         uses: actions/checkout@v4
@@ -304,10 +330,11 @@ jobs:
 
 
   test-spring-ai-integration:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     env:
       DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
@@ -331,10 +358,11 @@ jobs:
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-docker-compose:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     env:
       DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
@@ -355,10 +383,11 @@ jobs:
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-testcontainers:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     env:
       DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
@@ -375,10 +404,11 @@ jobs:
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-cloud-bindings:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     steps:
       - uses: actions/checkout@v4
       - name: Configure Testcontainers
