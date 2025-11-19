@@ -15,7 +15,7 @@ on:
 jobs:
 
   setup-matrix:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu24-2-8-OSS
     outputs:
       spring_ai_branches: ${{ steps.setup.outputs.spring_ai_branches }}
     steps:
