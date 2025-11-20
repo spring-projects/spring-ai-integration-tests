@@ -24,7 +24,7 @@ jobs:
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             branches="${{ inputs.spring_ai_branches }}"
           else
-            branches="main,1.0.x"
+            branches="main,1.1.x,1.0.x"
           fi
           echo "spring_ai_branches=[\"$(echo $branches | sed 's/,/","/g')\"]" >> $GITHUB_OUTPUT
 
