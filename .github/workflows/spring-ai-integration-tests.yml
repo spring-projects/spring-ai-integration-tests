@@ -15,7 +15,7 @@ on:
 jobs:
 
   setup-matrix:
-    runs-on: ubuntu24-2-8-OSS
+    runs-on: ubuntu-latest
     outputs:
       spring_ai_branches: ${{ steps.setup.outputs.spring_ai_branches }}
     steps:
@@ -384,7 +384,7 @@ jobs:
 
   test-testcontainers:
     needs: setup-matrix
-    runs-on: ubuntu-latest
+    runs-on: ubuntu24-2-8-OSS
     strategy:
       matrix:
         spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
@@ -393,6 +393,11 @@ jobs:
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
     steps:
       - uses: actions/checkout@v4
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          large-packages: false
+          docker-images: false
       - name: Configure Testcontainers
         run: |
           mkdir -p $HOME
