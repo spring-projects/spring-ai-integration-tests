@@ -9,6 +9,9 @@ inputs:
     description: "Maven properties to pass to the build"
     required: false
     default: ""
+  spring-ai-branch:
+    description: "Spring AI branch to test"
+    required: true
 
 runs:
   using: "composite"
@@ -29,10 +32,20 @@ runs:
         ref: ${{ inputs.spring-ai-branch }}
         path: spring-ai
 
-    - name: Set up JDK 17
+    - name: Determine JDK version
+      id: jdk-version
+      shell: bash
+      run: |
+        if [ "${{ inputs.spring-ai-branch }}" = "main" ]; then
+          echo "version=25" >> $GITHUB_OUTPUT
+        else
+          echo "version=17" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Set up JDK ${{ steps.jdk-version.outputs.version }}
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: ${{ steps.jdk-version.outputs.version }}
         distribution: 'temurin'
         cache: maven
 
