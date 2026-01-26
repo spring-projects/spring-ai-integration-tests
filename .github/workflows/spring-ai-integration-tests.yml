@@ -9,8 +9,7 @@ on:
         default: 'main,1.1.x'
         type: string
   schedule:
-    - cron: '0 4 * * 1-5'
-    - cron: '0 10 * * 1-5'
+    - cron: '0 4 * * 1,3,5'  # Mon, Wed, Fri at 4 AM UTC
 
 jobs:
 
