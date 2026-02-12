@@ -6,14 +6,30 @@ on:
       springBootVersion:
         description: "Spring Boot version"
         required: true
+      spring_ai_branch:
+        description: 'Spring AI branch to test'
+        required: true
+        default: 'main'
+        type: string
 
 jobs:
 
+  setup-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      spring_ai_branches: ${{ steps.setup.outputs.spring_ai_branches }}
+    steps:
+      - id: setup
+        run: |
+          branch="${{ inputs.spring_ai_branch }}"
+          echo "spring_ai_branches=[\"$branch\"]" >> $GITHUB_OUTPUT
+
   test-ollama:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     services:
       ollama:
         image: ollama/ollama:latest
@@ -48,10 +64,11 @@ jobs:
 
 
   test-anthropic:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     env:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
@@ -63,18 +80,24 @@ jobs:
       - uses: actions/checkout@v4
         if: steps.secret_check.conclusion == 'success'
 
+      - name: Capture Spring Boot version
+        if: steps.secret_check.conclusion == 'success'
+        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
+
       - name: Integration Test
         if: steps.secret_check.conclusion == 'success'
         uses: ./.github/actions/do-integration-test
         with:
           model-name: anthropic
+          maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-azure-openai:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     env:
       AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
@@ -133,10 +156,11 @@ jobs:
 #          model-name: huggingface
 #
   test-mistral-ai:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     env:
       MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
     steps:
@@ -155,6 +179,32 @@ jobs:
         uses: ./.github/actions/do-integration-test
         with:
           model-name: mistral-ai
+          maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
+
+  test-elevenlabs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spring_ai_branch: [ main ]
+    env:
+      ELEVEN_LABS_API_KEY: ${{ secrets.ELEVEN_LABS_API_KEY }}
+    steps:
+      - name: Check secrets
+        id: secret_check
+        if: ${{ env.ELEVEN_LABS_API_KEY != '' }}
+        run: echo "Secrets exist"
+
+      - name: Checkout the action
+        uses: actions/checkout@v4
+
+      - name: Capture Spring Boot version
+        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
+
+      - name: Integration Test
+        uses: ./.github/actions/do-integration-test
+        with:
+          model-name: elevenlabs
           maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
@@ -230,10 +280,11 @@ jobs:
 #          model-name: vertex-ai-gemini
 
   test-vectorstores:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     services:
       ollama:
         image: ollama/ollama:latest
@@ -251,14 +302,18 @@ jobs:
         if: ${{ env.OPENAI_API_KEY != '' && env.MISTRAL_AI_API_KEY != '' }}
         run: echo "Secrets exist"
 
-      - name: Capture Spring Boot version
-        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
-
       - uses: actions/checkout@v4
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          large-packages: false
       - name: Configure Testcontainers
         run: |
           mkdir -p $HOME
           echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
+
+      - name: Capture Spring Boot version
+        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
 
       - name: Integration Test
         uses: ./.github/actions/do-multi-module-test
@@ -268,6 +323,7 @@ jobs:
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-autoconfigure:
+    needs: setup-matrix
     env:
       # TODO: uncomment keys that have values
 #      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -287,11 +343,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     steps:
       - name: Checkout the action
         uses: actions/checkout@v4
-
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          large-packages: false
       - name: Capture Spring Boot version
         run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
 
@@ -303,10 +362,11 @@ jobs:
 
 
   test-spring-ai-integration:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     env:
       DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
@@ -334,10 +394,11 @@ jobs:
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-docker-compose:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     env:
       DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
@@ -363,15 +424,21 @@ jobs:
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-testcontainers:
-    runs-on: ubuntu-latest
+    needs: setup-matrix
+    runs-on: ubuntu24-2-8-OSS
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     env:
       DOCKER_QUIET: 1              # Suppresses Docker CLI progress output
       TESTCONTAINERS_QUIET: true   # Additional quieting for testcontainers
     steps:
       - uses: actions/checkout@v4
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          large-packages: false
+          docker-images: false
       - name: Configure Testcontainers
         run: |
           mkdir -p $HOME
@@ -386,10 +453,11 @@ jobs:
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-cloud-bindings:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        spring_ai_branch: [ main, 1.0.x ]
+        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     steps:
       - uses: actions/checkout@v4
       - name: Configure Testcontainers
