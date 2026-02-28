@@ -8,6 +8,11 @@ on:
         required: false
         default: 'main,1.1.x'
         type: string
+      test_suites:
+        description: 'Test suites to run (comma-separated: ollama, anthropic, azure-openai, mistral-ai, elevenlabs, vectorstores, autoconfigure, spring-ai-integration, docker-compose, testcontainers, cloud-bindings). Leave empty to run all.'
+        required: false
+        default: ''
+        type: string
   schedule:
     - cron: '0 4 * * 1,3,5'  # Mon, Wed, Fri at 4 AM UTC
 
@@ -29,6 +34,7 @@ jobs:
 
   test-ollama:
     needs: setup-matrix
+    if: ${{ github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'ollama') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -64,6 +70,7 @@ jobs:
 
   test-anthropic:
     needs: setup-matrix
+    if: ${{ github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'anthropic') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -88,6 +95,7 @@ jobs:
 
   test-azure-openai:
     needs: setup-matrix
+    if: ${{ github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'azure-openai') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -147,6 +155,7 @@ jobs:
 #
   test-mistral-ai:
     needs: setup-matrix
+    if: ${{ github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'mistral-ai') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -169,6 +178,7 @@ jobs:
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-elevenlabs:
+    if: ${{ github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'elevenlabs') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -263,6 +273,7 @@ jobs:
 
   test-vectorstores:
     needs: setup-matrix
+    if: ${{ github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'vectorstores') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -302,6 +313,7 @@ jobs:
 
   test-autoconfigure:
     needs: setup-matrix
+    if: ${{ github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'autoconfigure') }}
     env:
       # TODO: uncomment keys that have values
 #      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -337,6 +349,7 @@ jobs:
 
   test-spring-ai-integration:
     needs: setup-matrix
+    if: ${{ github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'spring-ai-integration') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -365,6 +378,7 @@ jobs:
 
   test-docker-compose:
     needs: setup-matrix
+    if: ${{ github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'docker-compose') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -390,6 +404,7 @@ jobs:
 
   test-testcontainers:
     needs: setup-matrix
+    if: ${{ github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'testcontainers') }}
     runs-on: ubuntu24-2-8-OSS
     strategy:
       matrix:
@@ -416,6 +431,7 @@ jobs:
 
   test-cloud-bindings:
     needs: setup-matrix
+    if: ${{ github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'cloud-bindings') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
