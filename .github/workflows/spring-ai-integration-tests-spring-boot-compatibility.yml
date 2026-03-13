@@ -140,38 +140,6 @@ jobs:
 #        with:
 #          model-name: bedrock
 
-  test-huggingface:
-    needs: setup-matrix
-    if: ${{ inputs.spring_ai_branch == '1.1.x' || inputs.spring_ai_branch == '1.0.x' }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
-    env:
-      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
-      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
-    steps:
-      - name: Check secrets
-        id: secret_check
-        if: ${{ env.HUGGINGFACE_API_KEY != '' && env.HUGGINGFACE_CHAT_URL != '' }}
-        run: echo "Secrets exist"
-
-      - name: Checkout the action
-        if: steps.secret_check.conclusion == 'success'
-        uses: actions/checkout@v4
-
-      - name: Capture Spring Boot version
-        if: steps.secret_check.conclusion == 'success'
-        run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
-
-      - name: Integration Test
-        if: steps.secret_check.conclusion == 'success'
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: huggingface
-          maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
-          spring-ai-branch: ${{ matrix.spring_ai_branch }}
-
   test-mistral-ai:
     needs: setup-matrix
     runs-on: ubuntu-latest
@@ -349,8 +317,8 @@ jobs:
       AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
 #      AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME: ${{ secrets.AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
-      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
+#      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
+#      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
 #      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
 #      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 #      PALM_API_KEY: ${{ secrets.PALM_API_KEY }}

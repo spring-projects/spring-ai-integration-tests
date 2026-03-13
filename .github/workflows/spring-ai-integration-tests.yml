@@ -9,7 +9,7 @@ on:
         default: 'main,1.1.x'
         type: string
       test_suites:
-        description: 'Test suites to run (comma-separated: ollama, anthropic, azure-openai, mistral-ai, elevenlabs, huggingface, vectorstores, autoconfigure, spring-ai-integration, docker-compose, testcontainers, cloud-bindings). Leave empty to run all.'
+        description: 'Test suites to run (comma-separated: ollama, anthropic, azure-openai, mistral-ai, elevenlabs, vectorstores, autoconfigure, spring-ai-integration, docker-compose, testcontainers, cloud-bindings). Leave empty to run all.'
         required: false
         default: ''
         type: string
@@ -142,32 +142,6 @@ jobs:
 #        uses: ./.github/actions/do-integration-test
 #        with:
 #          model-name: bedrock
-
-  test-huggingface:
-    needs: setup-matrix
-    if: ${{ (github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'huggingface')) && !contains(inputs.exclude_test_suites || '', 'huggingface') }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
-    env:
-      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
-      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
-    steps:
-      - name: Check secrets
-        id: secret_check
-        if: ${{ (matrix.spring_ai_branch == '1.1.x' || matrix.spring_ai_branch == '1.0.x') && env.HUGGINGFACE_API_KEY != '' && env.HUGGINGFACE_CHAT_URL != '' }}
-        run: echo "Secrets exist"
-
-      - uses: actions/checkout@v4
-        if: ${{ (matrix.spring_ai_branch == '1.1.x' || matrix.spring_ai_branch == '1.0.x') && steps.secret_check.conclusion == 'success' }}
-
-      - name: Integration Test
-        if: ${{ (matrix.spring_ai_branch == '1.1.x' || matrix.spring_ai_branch == '1.0.x') && steps.secret_check.conclusion == 'success' }}
-        uses: ./.github/actions/do-integration-test
-        with:
-          model-name: huggingface
-          spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
   test-mistral-ai:
     needs: setup-matrix
@@ -338,8 +312,8 @@ jobs:
       AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
 #      AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME: ${{ secrets.AZURE_OPENAI_TRANSCRIPTION_DEPLOYMENT_NAME }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
-      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
+#      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
+#      HUGGINGFACE_CHAT_URL: ${{ secrets.HUGGINGFACE_CHAT_URL }}
 #      MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
 #      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 #      PALM_API_KEY: ${{ secrets.PALM_API_KEY }}

@@ -17,13 +17,10 @@ runs:
       uses: actions/github-script@v7
       with:
         script: |
-          const branch = '${{ inputs.spring-ai-branch }}';
-          const env = ${{ toJson(env) }};
-          const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0);
-          const allowedEmptyForMain = ['HUGGINGFACE_API_KEY', 'HUGGINGFACE_CHAT_URL'];
-          const filteredEmpty = branch === 'main' ? emptyEnvEntries.filter(e => !allowedEmptyForMain.includes(e[0])) : emptyEnvEntries;
-          filteredEmpty.length > 0 &&
-            core.setFailed('Missing value for environment variable(s): ' + filteredEmpty.map(e => e[0]).join(', '));
+          const env = ${{ toJson(env) }}
+          const emptyEnvEntries = Object.entries(env).filter(e => e[1].length === 0)
+          emptyEnvEntries.length > 0 &&
+            core.setFailed('Missing value for environment variable(s): ' + emptyEnvEntries.map(e => e[0]).join(', '));
 
     - name: Check out repository code
       uses: actions/checkout@v4
