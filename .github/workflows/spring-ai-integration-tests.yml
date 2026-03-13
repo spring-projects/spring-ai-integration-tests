@@ -145,7 +145,7 @@ jobs:
 
   test-huggingface:
     needs: setup-matrix
-    if: ${{ (github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'huggingface')) && !contains(inputs.exclude_test_suites || '', 'huggingface') && (matrix.spring_ai_branch == '1.1.x' || matrix.spring_ai_branch == '1.0.x') }}
+    if: ${{ (github.event_name == 'schedule' || inputs.test_suites == '' || contains(inputs.test_suites, 'huggingface')) && !contains(inputs.exclude_test_suites || '', 'huggingface') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -156,14 +156,14 @@ jobs:
     steps:
       - name: Check secrets
         id: secret_check
-        if: ${{ env.HUGGINGFACE_API_KEY != '' && env.HUGGINGFACE_CHAT_URL != '' }}
+        if: ${{ (matrix.spring_ai_branch == '1.1.x' || matrix.spring_ai_branch == '1.0.x') && env.HUGGINGFACE_API_KEY != '' && env.HUGGINGFACE_CHAT_URL != '' }}
         run: echo "Secrets exist"
 
       - uses: actions/checkout@v4
-        if: steps.secret_check.conclusion == 'success'
+        if: ${{ (matrix.spring_ai_branch == '1.1.x' || matrix.spring_ai_branch == '1.0.x') && steps.secret_check.conclusion == 'success' }}
 
       - name: Integration Test
-        if: steps.secret_check.conclusion == 'success'
+        if: ${{ (matrix.spring_ai_branch == '1.1.x' || matrix.spring_ai_branch == '1.0.x') && steps.secret_check.conclusion == 'success' }}
         uses: ./.github/actions/do-integration-test
         with:
           model-name: huggingface
