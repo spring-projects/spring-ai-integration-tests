@@ -112,6 +112,7 @@ runs:
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-mistral-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure OCI GenAI test
+      if: ${{ inputs.spring-ai-branch == '1.1.x' || inputs.spring-ai-branch == '1.0.x' }}
       shell: bash
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-oci-genai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
