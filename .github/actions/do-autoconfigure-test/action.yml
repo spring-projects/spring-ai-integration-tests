@@ -141,6 +141,7 @@ runs:
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-vertex-ai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure ZhipuAI test
+      if: ${{ inputs.spring-ai-branch == '1.1.x' || inputs.spring-ai-branch == '1.0.x' }}
       shell: bash
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-zhipuai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
