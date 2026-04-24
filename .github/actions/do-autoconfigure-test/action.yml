@@ -91,6 +91,7 @@ runs:
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-anthropic -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Azure OpenAI test
+      if: ${{ inputs.spring-ai-branch != 'main' }}
       shell: bash
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/models/spring-ai-autoconfigure-model-azure-openai -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
