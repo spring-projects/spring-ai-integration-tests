@@ -303,7 +303,15 @@ jobs:
       - name: Integration Test
         uses: ./.github/actions/do-multi-module-test
         with:
-          modules: vector-stores/spring-ai-azure-cosmos-db-store,vector-stores/spring-ai-azure-store,vector-stores/spring-ai-cassandra-store,vector-stores/spring-ai-chroma-store,vector-stores/spring-ai-coherence-store,vector-stores/spring-ai-elasticsearch-store,vector-stores/spring-ai-gemfire-store,vector-stores/spring-ai-hanadb-store,vector-stores/spring-ai-mariadb-store,vector-stores/spring-ai-milvus-store,vector-stores/spring-ai-mongodb-atlas-store,vector-stores/spring-ai-neo4j-store,vector-stores/spring-ai-opensearch-store,vector-stores/spring-ai-oracle-store,vector-stores/spring-ai-pgvector-store,vector-stores/spring-ai-pinecone-store,vector-stores/spring-ai-qdrant-store,vector-stores/spring-ai-redis-store,vector-stores/spring-ai-typesense-store,vector-stores/spring-ai-weaviate-store
+          modules: vector-stores/spring-ai-azure-cosmos-db-store,vector-stores/spring-ai-azure-store,vector-stores/spring-ai-cassandra-store,vector-stores/spring-ai-chroma-store,vector-stores/spring-ai-coherence-store,vector-stores/spring-ai-elasticsearch-store,vector-stores/spring-ai-gemfire-store,vector-stores/spring-ai-mariadb-store,vector-stores/spring-ai-milvus-store,vector-stores/spring-ai-mongodb-atlas-store,vector-stores/spring-ai-neo4j-store,vector-stores/spring-ai-opensearch-store,vector-stores/spring-ai-oracle-store,vector-stores/spring-ai-pgvector-store,vector-stores/spring-ai-pinecone-store,vector-stores/spring-ai-qdrant-store,vector-stores/spring-ai-redis-store,vector-stores/spring-ai-typesense-store,vector-stores/spring-ai-weaviate-store
+          maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
+          spring-ai-branch: ${{ matrix.spring_ai_branch }}
+
+      - name: Integration Test HanaDB
+        if: ${{ matrix.spring_ai_branch != 'main' }}
+        uses: ./.github/actions/do-multi-module-test
+        with:
+          modules: vector-stores/spring-ai-hanadb-store
           maven-properties: "-Dspring-boot.version=$SPRING_BOOT_VERSION"
           spring-ai-branch: ${{ matrix.spring_ai_branch }}
 
