@@ -452,14 +452,22 @@ jobs:
       matrix:
         spring_ai_branch: ${{ fromJSON(needs.setup-matrix.outputs.spring_ai_branches) }}
     steps:
+      - name: Check branch
+        id: branch_check
+        if: ${{ matrix.spring_ai_branch == '1.1.x' || matrix.spring_ai_branch == '1.0.x' }}
+        run: echo "Branch is supported"
       - uses: actions/checkout@v4
+        if: steps.branch_check.conclusion == 'success'
       - name: Configure Testcontainers
+        if: steps.branch_check.conclusion == 'success'
         run: |
           mkdir -p $HOME
           echo "testcontainers.reuse.enable = true" >> $HOME/.testcontainers.properties
       - name: Capture Spring Boot version
+        if: steps.branch_check.conclusion == 'success'
         run: echo SPRING_BOOT_VERSION=${{ github.event.inputs.springBootVersion }} >> $GITHUB_ENV
       - name: Integration Test
+        if: steps.branch_check.conclusion == 'success'
         uses: ./.github/actions/do-multi-module-test
         with:
           modules: spring-ai-spring-cloud-bindings
