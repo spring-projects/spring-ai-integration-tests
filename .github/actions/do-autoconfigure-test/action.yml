@@ -151,6 +151,7 @@ runs:
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-azure -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
     - name: Run Spring AI Autoconfigure Azure Cosmos DB test
+      if: ${{ inputs.spring-ai-branch == '1.1.x' || inputs.spring-ai-branch == '1.0.x' }}
       shell: bash
       run: cd spring-ai && echo 'Running with maven properties:' ${{ inputs.maven-properties }} && ./mvnw -ntp -pl auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-azure-cosmos-db -Pintegration-tests ${{ inputs.maven-properties }} -Dfailsafe.rerunFailingTestsCount=2 verify
 
